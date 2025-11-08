@@ -585,8 +585,8 @@ migrate((app) => {
         "body": "<p>Hello,</p>\n<p>Click on the button below to confirm your new email address.</p>\n<p>\n  <a class=\"btn\" href=\"{APP_URL}/_/#/auth/confirm-email-change/{TOKEN}\" target=\"_blank\" rel=\"noopener\">Confirm new email</a>\n</p>\n<p><i>If you didn't ask to change your email address, you can ignore this email.</i></p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>",
         "subject": "Confirm your {APP_NAME} new email address"
       },
-      "createRule": "// 创建（注册）时level只能为basic（基本用户）\n@request.body.level = \"basic\"",
-      "deleteRule": "id = @request.auth.id",
+      "createRule": "// 根据config，判断是否允许用户注册\n(\n  @collection.config.key ?= 'allow-users-to-register' &&\n  @collection.config.value ?= true\n)",
+      "deleteRule": null,
       "emailChangeToken": {
         "duration": 1800
       },
@@ -724,30 +724,6 @@ migrate((app) => {
         },
         {
           "hidden": false,
-          "id": "select2599078931",
-          "maxSelect": 1,
-          "name": "level",
-          "presentable": false,
-          "required": true,
-          "system": false,
-          "type": "select",
-          "values": [
-            "basic",
-            "premium"
-          ]
-        },
-        {
-          "hidden": false,
-          "id": "json3414765911",
-          "maxSize": 0,
-          "name": "info",
-          "presentable": false,
-          "required": false,
-          "system": false,
-          "type": "json"
-        },
-        {
-          "hidden": false,
           "id": "autodate2990389176",
           "name": "created",
           "onCreate": true,
@@ -818,7 +794,7 @@ migrate((app) => {
       },
       "system": false,
       "type": "auth",
-      "updateRule": "id = @request.auth.id &&\n// 禁止修改level\n@request.body.level:isset = false ",
+      "updateRule": "id = @request.auth.id",
       "verificationTemplate": {
         "body": "<p>Hello,</p>\n<p>Thank you for joining us at {APP_NAME}.</p>\n<p>Click on the button below to verify your email address.</p>\n<p>\n  <a class=\"btn\" href=\"{APP_URL}/_/#/auth/confirm-verification/{TOKEN}\" target=\"_blank\" rel=\"noopener\">Verify</a>\n</p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>",
         "subject": "Verify your {APP_NAME} email"
@@ -903,126 +879,8 @@ migrate((app) => {
       "viewRule": ""
     },
     {
-      "createRule": "// 需登录\n@request.auth.id != \"\" &&\n// 创建时需为创建者（传入的author需为当前用户）\n@request.auth.id = author.id &&\n// 根据config，判断是否允许基础用户上传文件\n(\n  // config中允许基础用户，则可以上传\n  (\n    @collection.config.key = \"allow-basic-users-upload\" && \n    @collection.config.value = true\n  ) ||\n  // config中不允许基础用户，则用户level不能为basic\n  // auth中的可能不是实时的，应根据用户集合\n  (\n    @collection.users.id = @request.auth.id &&\n    @collection.users.level != 'basic'\n  )\n)",
-      "deleteRule": "// 删除时需为创建者\n@request.auth.id = author.id\n// 并且删除时不能被房间使用（待实现，在api规则中无法实现，需扩展）",
-      "fields": [
-        {
-          "autogeneratePattern": "[a-z0-9]{15}",
-          "hidden": false,
-          "id": "text3208210256",
-          "max": 15,
-          "min": 15,
-          "name": "id",
-          "pattern": "^[a-z0-9]+$",
-          "presentable": false,
-          "primaryKey": true,
-          "required": true,
-          "system": true,
-          "type": "text"
-        },
-        {
-          "hidden": false,
-          "id": "file2359244304",
-          "maxSelect": 1,
-          "maxSize": 5000000000,
-          "mimeTypes": [],
-          "name": "file",
-          "presentable": false,
-          "protected": false,
-          "required": true,
-          "system": false,
-          "thumbs": [
-            "100x0",
-            "500x0"
-          ],
-          "type": "file"
-        },
-        {
-          "hidden": false,
-          "id": "number4156564586",
-          "max": null,
-          "min": -1,
-          "name": "size",
-          "onlyInt": false,
-          "presentable": false,
-          "required": false,
-          "system": false,
-          "type": "number"
-        },
-        {
-          "autogeneratePattern": "",
-          "hidden": false,
-          "id": "text724990059",
-          "max": 0,
-          "min": 0,
-          "name": "title",
-          "pattern": "",
-          "presentable": false,
-          "primaryKey": false,
-          "required": false,
-          "system": false,
-          "type": "text"
-        },
-        {
-          "autogeneratePattern": "",
-          "hidden": false,
-          "id": "text1843675174",
-          "max": 0,
-          "min": 0,
-          "name": "description",
-          "pattern": "",
-          "presentable": false,
-          "primaryKey": false,
-          "required": false,
-          "system": false,
-          "type": "text"
-        },
-        {
-          "cascadeDelete": false,
-          "collectionId": "_pb_users_auth_",
-          "hidden": false,
-          "id": "relation3182418120",
-          "maxSelect": 1,
-          "minSelect": 0,
-          "name": "author",
-          "presentable": false,
-          "required": true,
-          "system": false,
-          "type": "relation"
-        },
-        {
-          "hidden": false,
-          "id": "autodate2990389176",
-          "name": "created",
-          "onCreate": true,
-          "onUpdate": false,
-          "presentable": false,
-          "system": false,
-          "type": "autodate"
-        },
-        {
-          "hidden": false,
-          "id": "autodate3332085495",
-          "name": "updated",
-          "onCreate": true,
-          "onUpdate": true,
-          "presentable": false,
-          "system": false,
-          "type": "autodate"
-        }
-      ],
-      "id": "pbc_3446931122",
-      "indexes": [],
-      "listRule": "",
-      "name": "files",
-      "system": false,
-      "type": "base",
-      "updateRule": "// 修改时需为创建者\n@request.auth.id = author.id",
-      "viewRule": ""
-    },
-    {
-      "createRule": "// 创建消息需登录\n@request.auth.id != \"\" &&\n// 创建时需为创建者（传入的author需为当前用户）\n@request.auth.id = author.id",
-      "deleteRule": "// 删除消息需为创建者\n@request.auth.id = author.id",
+      "createRule": "// 创建消息需登录\n@request.auth.id != \"\" &&\n// 创建时需为创建者（传入的author需为当前用户）\n@request.auth.id = @request.body.author",
+      "deleteRule": null,
       "fields": [
         {
           "autogeneratePattern": "[a-z0-9]{15}",
@@ -1066,43 +924,26 @@ migrate((app) => {
           "type": "relation"
         },
         {
-          "cascadeDelete": true,
-          "collectionId": "pbc_3085411453",
+          "cascadeDelete": false,
+          "collectionId": "pbc_2605467279",
           "hidden": false,
-          "id": "relation1923043739",
+          "id": "relation2303346800",
           "maxSelect": 1,
           "minSelect": 0,
-          "name": "room",
+          "name": "replyMessage",
           "presentable": false,
           "required": false,
           "system": false,
           "type": "relation"
         },
         {
-          "cascadeDelete": false,
-          "collectionId": "pbc_3085411453",
           "hidden": false,
-          "id": "relation2853697171",
-          "maxSelect": 1,
-          "minSelect": 0,
-          "name": "quoteRoom",
+          "id": "bool2382110195",
+          "name": "isDeleted",
           "presentable": false,
           "required": false,
           "system": false,
-          "type": "relation"
-        },
-        {
-          "cascadeDelete": false,
-          "collectionId": "pbc_3446931122",
-          "hidden": false,
-          "id": "relation1410830616",
-          "maxSelect": 1,
-          "minSelect": 0,
-          "name": "quoteFile",
-          "presentable": false,
-          "required": false,
-          "system": false,
-          "type": "relation"
+          "type": "bool"
         },
         {
           "hidden": false,
@@ -1127,183 +968,12 @@ migrate((app) => {
       ],
       "id": "pbc_2605467279",
       "indexes": [],
-      "listRule": "",
+      "listRule": "// 用户已登录，可以查看消息\n@request.auth.id != \"\" ||\n// 根据config，判断是否允许未登录用户查看消息\n(\n  @collection.config.key ?= 'allow-anonymous-view' &&\n  @collection.config.value ?= true\n)",
       "name": "messages",
       "system": false,
       "type": "base",
-      "updateRule": "// 修改消息需为创建者\n@request.auth.id = author.id",
-      "viewRule": ""
-    },
-    {
-      "createRule": "// 创建房间需登录\n@request.auth.id != \"\" &&\n// 创建时需为创建者（传入的author需为当前用户）\n@request.auth.id = author.id",
-      "deleteRule": "// 删除房间需为创建者\n@request.auth.id = author.id",
-      "fields": [
-        {
-          "autogeneratePattern": "[a-z0-9]{15}",
-          "hidden": false,
-          "id": "text3208210256",
-          "max": 15,
-          "min": 15,
-          "name": "id",
-          "pattern": "^[a-z0-9]+$",
-          "presentable": false,
-          "primaryKey": true,
-          "required": true,
-          "system": true,
-          "type": "text"
-        },
-        {
-          "autogeneratePattern": "",
-          "hidden": false,
-          "id": "text1579384326",
-          "max": 0,
-          "min": 0,
-          "name": "title",
-          "pattern": "",
-          "presentable": false,
-          "primaryKey": false,
-          "required": true,
-          "system": false,
-          "type": "text"
-        },
-        {
-          "autogeneratePattern": "",
-          "hidden": false,
-          "id": "text1843675174",
-          "max": 0,
-          "min": 0,
-          "name": "description",
-          "pattern": "",
-          "presentable": false,
-          "primaryKey": false,
-          "required": false,
-          "system": false,
-          "type": "text"
-        },
-        {
-          "hidden": false,
-          "id": "file2366146245",
-          "maxSelect": 1,
-          "maxSize": 5000000,
-          "mimeTypes": [
-            "image/jpeg",
-            "image/png",
-            "image/svg+xml"
-          ],
-          "name": "cover",
-          "presentable": false,
-          "protected": false,
-          "required": false,
-          "system": false,
-          "thumbs": [
-            "100x0",
-            "500x0"
-          ],
-          "type": "file"
-        },
-        {
-          "hidden": false,
-          "id": "number606229465",
-          "max": null,
-          "min": null,
-          "name": "coverWidth",
-          "onlyInt": true,
-          "presentable": false,
-          "required": false,
-          "system": false,
-          "type": "number"
-        },
-        {
-          "hidden": false,
-          "id": "number2705033776",
-          "max": null,
-          "min": null,
-          "name": "coverHeight",
-          "onlyInt": true,
-          "presentable": false,
-          "required": false,
-          "system": false,
-          "type": "number"
-        },
-        {
-          "cascadeDelete": false,
-          "collectionId": "_pb_users_auth_",
-          "hidden": false,
-          "id": "relation3182418120",
-          "maxSelect": 1,
-          "minSelect": 0,
-          "name": "author",
-          "presentable": false,
-          "required": true,
-          "system": false,
-          "type": "relation"
-        },
-        {
-          "cascadeDelete": false,
-          "collectionId": "pbc_3446931122",
-          "hidden": false,
-          "id": "relation3615625517",
-          "maxSelect": 999,
-          "minSelect": 0,
-          "name": "playlist",
-          "presentable": false,
-          "required": false,
-          "system": false,
-          "type": "relation"
-        },
-        {
-          "hidden": false,
-          "id": "json1874629670",
-          "maxSize": 0,
-          "name": "tags",
-          "presentable": false,
-          "required": false,
-          "system": false,
-          "type": "json"
-        },
-        {
-          "autogeneratePattern": "",
-          "hidden": false,
-          "id": "text901924565",
-          "max": 8,
-          "min": 4,
-          "name": "password",
-          "pattern": "^\\d{4,8}$",
-          "presentable": false,
-          "primaryKey": false,
-          "required": false,
-          "system": false,
-          "type": "text"
-        },
-        {
-          "hidden": false,
-          "id": "autodate2990389176",
-          "name": "created",
-          "onCreate": true,
-          "onUpdate": false,
-          "presentable": false,
-          "system": false,
-          "type": "autodate"
-        },
-        {
-          "hidden": false,
-          "id": "autodate3332085495",
-          "name": "updated",
-          "onCreate": true,
-          "onUpdate": true,
-          "presentable": false,
-          "system": false,
-          "type": "autodate"
-        }
-      ],
-      "id": "pbc_3085411453",
-      "indexes": [],
-      "listRule": "",
-      "name": "rooms",
-      "system": false,
-      "type": "base",
-      "updateRule": "// 修改房间需为创建者\n@request.auth.id = author.id",
-      "viewRule": ""
+      "updateRule": "// 修改消息需登录\n@request.auth.id != \"\" &&\n// 修改消息需为创建者\n@request.auth.id = author.id &&\n// 禁止修改author\n@request.body.author:isset = false",
+      "viewRule": "// 用户已登录，可以查看消息\n@request.auth.id != \"\" ||\n// 根据config，判断是否允许未登录用户查看消息\n(\n  @collection.config.key ?= 'allow-anonymous-view' &&\n  @collection.config.value ?= true\n)"
     }
   ];
 
