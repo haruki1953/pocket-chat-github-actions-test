@@ -34,6 +34,13 @@ export const useChatShowMoreOnTopOrBottomTwoway = (data: {
     chatScrollAdjustPositionAfterMessageChange,
   } = data
 
+  // 【251110】解决发现的严重问题
+  // 消息加载中时跳转至设置页再返回时可能导致问题，十分严重，会导致页面卡死。可能是因为组件卸载后导致加载更多请求逻辑无限循环导致的
+  let isUnmounted = false
+  onUnmounted(() => {
+    isUnmounted = true
+  })
+
   /**
    * 下一页逻辑，向上加载更多
    * ```
@@ -129,6 +136,11 @@ export const useChatShowMoreOnTopOrBottomTwoway = (data: {
       }
       // 请求下一页
       await chatRoomMessagesInfiniteTwowayQuery.fetchNextPage()
+      // 【251110】解决发现的严重问题
+      // 消息加载中时跳转至设置页再返回时可能导致问题，十分严重，会导致页面卡死。可能是因为组件卸载后导致加载更多请求逻辑无限循环导致的
+      if (isUnmounted) {
+        throw new Error('isUnmounted')
+      }
     }
     // 计算限制游标
     // 当前TopCursor的index
@@ -269,6 +281,11 @@ export const useChatShowMoreOnTopOrBottomTwoway = (data: {
       }
       // 请求下一页，底部 Previous
       await chatRoomMessagesInfiniteTwowayQuery.fetchPreviousPage()
+      // 【251110】解决发现的严重问题
+      // 消息加载中时跳转至设置页再返回时可能导致问题，十分严重，会导致页面卡死。可能是因为组件卸载后导致加载更多请求逻辑无限循环导致的
+      if (isUnmounted) {
+        throw new Error('isUnmounted')
+      }
     }
     // 计算限制游标
     // 当前BottomCursor的index
