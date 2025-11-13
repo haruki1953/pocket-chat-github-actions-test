@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ConfirmContainer } from '@/components'
+import { routerDict } from '@/config'
 import { pb } from '@/lib'
 import { useI18nStore } from '@/stores'
+import { useRouter } from 'vue-router'
 
 const i18nStore = useI18nStore()
 
@@ -10,12 +12,17 @@ const refConfirmContainer = ref<InstanceType<typeof ConfirmContainer> | null>(
   null
 )
 
+const router = useRouter()
+
 const submit = async () => {
   // 遮罩确认框
   await refConfirmContainer.value?.confirm()
 
   // 退出登录即清除authStore
   pb.authStore.clear()
+
+  // 退出登录后应跳转至登录页
+  router.push(routerDict.LoginPage.path)
 }
 </script>
 
