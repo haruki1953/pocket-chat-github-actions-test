@@ -265,6 +265,9 @@ defineExpose({
                 size="large"
                 type="textarea"
                 resize="none"
+                :placeholder="
+                  i18nStore.t('chatInputBarShiftEnterPlaceholderText')()
+                "
                 :rows="1"
                 :autosize="{ minRows: 1, maxRows: 10 }"
                 @keydown.shift.enter.exact.prevent="handleChatInputKeydownEnter"
@@ -408,8 +411,14 @@ defineExpose({
       color: var(--color-text);
       // font-weight: bold;
       // font-size: 16px;
+      font-size: 14px;
       // 防止目标区域中的滚动触发父元素中的滚动
       overscroll-behavior: contain;
+      &::placeholder {
+        color: var(--color-text-soft);
+        font-size: 14px;
+        font-style: italic;
+      }
     }
     // .el-input__wrapper {
     //   background-color: var(--color-background-soft);

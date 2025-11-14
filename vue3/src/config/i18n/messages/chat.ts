@@ -160,4 +160,12 @@ export const i18nMessagesChatPart = {
     'ko-KR': () => '네트워크가 불안정합니다. 새로고침 해주세요' as const, // 韩语
     'ru-RU': () => 'Сеть нестабильна, пожалуйста, обновите' as const, // 俄语
   },
+  chatInputBarShiftEnterPlaceholderText: {
+    'en-US': () => 'Shortcut: Shift + Enter to send' as const,
+    'zh-CN': () => '快捷键：Shift + Enter 发送消息' as const,
+    'zh-TW': () => '快速鍵：Shift + Enter 發送訊息' as const,
+    'ja-JP': () => 'ショートカット: Shift + Enter で送信' as const, // 日语
+    'ko-KR': () => '단축키: Shift + Enter 로 메시지 전송' as const, // 韩语
+    'ru-RU': () => 'Сочетание клавиш: Shift + Enter — отправка' as const, // 俄语
+  },
 } as const satisfies I18nMessagesSatisfiesType
