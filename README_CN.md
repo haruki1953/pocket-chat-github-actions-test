@@ -1,6 +1,7 @@
-<p align="center" style="margin-bottom: 5px;">
-  <img src="./assets/message-3-fill-7899CC.svg" alt="cover" style="width: 128px; height: 128px;"></img>
-</p>
+<div style="display: flex; justify-content: center;">
+  <img src="./assets/message-3-fill-7899CC.svg" style="width: 128px; height: 128px;"></img>
+</div>
+
 
 <h1 align="center">
   PocketChat
