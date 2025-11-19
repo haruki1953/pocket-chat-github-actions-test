@@ -15,7 +15,12 @@ import type {
   ChatDisplayDependentDataInitializationChooseType,
   ChatColPageRecoverDataCheckType,
 } from './types'
-import { chatInputBarDefaultHeightConfig } from '@/config'
+import {
+  appIcon,
+  appIconNotif,
+  chatInputBarDefaultHeightConfig,
+} from '@/config'
+import { useFavicon, useTitle } from '@vueuse/core'
 
 const i18nStore = useI18nStore()
 
@@ -58,6 +63,30 @@ const props = defineProps<{
   chatTitle: string
   chatMessageQueryisNullAndError: boolean
 }>()
+
+// 有新消息时网站图标与标题改变
+useFavicon(
+  computed(() => {
+    if (props.chatRoomMessagesRealtimeUnReadNumber > 0) {
+      return appIconNotif
+    }
+    return appIcon
+  })
+)
+// const title = useTitle()
+watch(
+  () => props.chatRoomMessagesRealtimeUnReadNumber,
+  (num) => {
+    // 正则匹配开头的 (数字)，并去除
+    const baseTitle = document.title.replace(/^\(\d+\)\s*/, '')
+
+    if (num > 0) {
+      document.title = `(${num}) ${baseTitle}`
+    } else {
+      document.title = baseTitle
+    }
+  }
+)
 
 // 消息详情对话框
 const refMessageInfoDialog = ref<InstanceType<typeof MessageInfoDialog> | null>(
