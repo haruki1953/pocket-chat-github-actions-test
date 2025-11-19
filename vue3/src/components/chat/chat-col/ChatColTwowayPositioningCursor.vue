@@ -15,7 +15,7 @@ import {
   useTwowayPositioningCursorDataInitialization,
 } from './composables'
 import ChatColTemplateBase from './ChatColTemplateBase.vue'
-import { useScroll } from '@vueuse/core'
+import { useChatRoomMessagesRealtimeNotifEffects } from './composables/chat-notif-effects'
 
 const props = defineProps<{
   /** 滚动容器元素 */
@@ -79,6 +79,7 @@ const {
   // 聊天页消息 游标分页无限查询
   chatRoomMessagesInfiniteTwowayQuery,
   // 将分页数据处理为消息数组，反转（从旧到新）
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   chatRoomMessagesList,
   // 从实时消息中，获取本房间的消息
   chatRoomMessagesRealtime,
@@ -248,6 +249,12 @@ useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave({
   chatRoomMessagesLimitBottomCursor,
   refChatColTemplateBase,
   chatRoomMessagesRealtimeReadNumber,
+})
+
+// 封装 消息实时提示效果
+// useChatRoomMessagesRealtimeNotifEffects
+useChatRoomMessagesRealtimeNotifEffects({
+  chatRoomMessagesRealtimeUnReadNumber,
 })
 </script>
 

@@ -5,6 +5,7 @@ import type {
   ChatRoomMessagesRealtimeType,
   PropsType,
 } from './dependencies'
+import { useAuthStore } from '@/stores'
 
 // 未读实时消息统计
 export const useChatRoomMessagesRealtimeUnReadNotes = (data: {
@@ -28,12 +29,24 @@ export const useChatRoomMessagesRealtimeUnReadNotes = (data: {
   const { chooseInitialization, chatColPageRecoverData } =
     chatDisplayDependentDataInitializationChoose
 
+  const authStore = useAuthStore()
+
+  // 去除自己发送的消息
+  const chatRoomMessagesRealtimeWithoutSelfSend = computed(() => {
+    if (authStore.isValid === false || authStore.record == null) {
+      return chatRoomMessagesRealtime.value
+    }
+    const userId = authStore.record.id
+    return chatRoomMessagesRealtime.value.filter((i) => i.author !== userId)
+  })
+
   // 新消息提示
   // 已读的实时消息数量（定义）
   const chatRoomMessagesRealtimeReadNumber = ref(0)
   const chatRoomMessagesRealtimeReadNumberUpdateFn = () => {
+    // 自己发送的消息不算
     chatRoomMessagesRealtimeReadNumber.value =
-      chatRoomMessagesRealtime.value.length
+      chatRoomMessagesRealtimeWithoutSelfSend.value.length
   }
   // 已读的实时消息数量（初始化）
   // 根据“页面恢复数据”初始化
@@ -54,8 +67,9 @@ export const useChatRoomMessagesRealtimeUnReadNotes = (data: {
 
   // 未读的实时消息数量
   const chatRoomMessagesRealtimeUnReadNumber = computed(() => {
+    // 自己发送的消息不算
     return (
-      chatRoomMessagesRealtime.value.length -
+      chatRoomMessagesRealtimeWithoutSelfSend.value.length -
       chatRoomMessagesRealtimeReadNumber.value
     )
   })
