@@ -1,10 +1,5 @@
-import {
-  pbMessagesSubscribeAllApi,
-  type MessagesResponseWidthExpand,
-} from '@/api'
-import { Collections, pb } from '@/lib'
+import { type MessagesResponseWidthExpand } from '@/api'
 import { defineStore } from 'pinia'
-import type { UnsubscribeFunc } from 'pocketbase'
 import { ref } from 'vue'
 
 /** 用于储存订阅的实时Messages */
@@ -15,44 +10,45 @@ export const useRealtimeMessagesStore = defineStore(
     /** 创建的帖子 */
     const createListRef = ref<MessagesResponseWidthExpand[]>([])
     const createList = computed(() => createListRef.value)
+    const createListCheckAndPush = (val: MessagesResponseWidthExpand) => {
+      // TODO 检查是否已存在
+      createListRef.value.push(val)
+    }
+    const createListSet = (val: MessagesResponseWidthExpand[]) => {
+      createListRef.value = val
+    }
+
     /** 更新的帖子 */
     const updateListRef = ref<MessagesResponseWidthExpand[]>([])
     const updateList = computed(() => updateListRef.value)
+    const updateListPush = (val: MessagesResponseWidthExpand) => {
+      updateListRef.value.push(val)
+    }
     /* 删除的帖子 */
     const deleteListRef = ref<MessagesResponseWidthExpand[]>([])
     const deleteList = computed(() => deleteListRef.value)
+    const deleteListPush = (val: MessagesResponseWidthExpand) => {
+      deleteListRef.value.push(val)
+    }
 
-    const unSubscribeFunc = ref<UnsubscribeFunc | null>(null)
-    // 启动订阅，将在App.vue调用
-    const startSubscribe = async () => {
-      if (unSubscribeFunc.value != null) {
-        return 'unSubscribeFunc.value != null' as const
-      }
-      const pbRes = await pbMessagesSubscribeAllApi(async (e) => {
-        // // 模拟延迟
-        // await new Promise((resolve) => setTimeout(resolve, 6000))
-
-        if (e.action === 'create') {
-          createListRef.value.push(e.record)
-        }
-        if (e.action === 'update') {
-          updateListRef.value.push(e.record)
-        }
-        if (e.action === 'delete') {
-          deleteListRef.value.push(e.record)
-        }
-        // console.log(e)
-      })
-      unSubscribeFunc.value = pbRes
-      return 'pbMessagesSubscribeAllApi'
+    // 是否已启动订阅
+    const isSubscribeStartedRef = ref(false)
+    const isSubscribeStarted = computed(() => isSubscribeStartedRef.value)
+    const isSubscribeStartedSetTrue = () => {
+      isSubscribeStartedRef.value = true
     }
 
     return {
       //
       createList,
+      createListCheckAndPush,
+      createListSet,
       updateList,
+      updateListPush,
       deleteList,
-      startSubscribe,
+      deleteListPush,
+      isSubscribeStarted,
+      isSubscribeStartedSetTrue,
     }
   },
   {
