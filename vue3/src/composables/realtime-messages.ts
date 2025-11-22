@@ -67,15 +67,19 @@ export const useRealtimeMessagesSubscribe = () => {
       )
     })()
 
-    // 显示通知
-    useWebNotification({
+    // 准备通知
+    const notif = useWebNotification({
       title,
       body,
       icon,
       tag: newMessage.id,
     })
-      .show()
-      .catch(() => {})
+    // 点击通知时回到页面
+    notif.onClick(() => {
+      window.focus()
+    })
+    // 显示通知
+    notif.show().catch(() => {})
   }
 
   // 启动订阅，将在App.vue调用
