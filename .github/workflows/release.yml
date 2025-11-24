@@ -70,7 +70,7 @@ jobs:
           cd ${{ github.workspace }}/project-tools-node
           pnpm install --frozen-lockfile
 
-      # 如果缓存未命中，则执行下载脚本，获取 PocketBase 各平台二进制文件
+      # 执行下载脚本，获取 PocketBase 各平台二进制文件
       - name: Download PocketBase release files
         run: |
           cd ${{ github.workspace }}/project-tools-node
