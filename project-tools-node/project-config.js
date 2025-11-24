@@ -2,22 +2,19 @@ const path = require("path");
 
 
 // === 可配置变量 ===
-/** 
- * 项目名
- * @type {string} 
- */
+/** 项目名 */
 const PROJECT_NAME = "pocket_chat_github_actions_test";
 
-/** 
- * pocketbase版本
- * @type {string} 
-*/
+/** 项目根目录 */
+const PROJECT_ROOT_DIR = path.resolve(__dirname, "..");
+
+/** 要将pocketbase下载到的地方 */
+const POCKETBASE_DOWNLOAD_DIR = path.join(PROJECT_ROOT_DIR, "pocketbase-release-file");
+
+/** pocketbase版本 */
 const POCKETBASE_VERSION = "0.33.0";
 
-/** 
- * 打包平台数组
- * @type {string[]} 
- */
+/** 打包平台数组 */
 const POCKETBASE_PLATFORMS = [
   'darwin_amd64',
   'darwin_arm64',
@@ -42,16 +39,10 @@ const POCKETBASE_DOWNLOAD_URL_FN = (platformStr) => {
   return `http://127.0.0.1:5500/pocketbase_${POCKETBASE_VERSION}_${platformStr}.zip`
 }
 
-/** 
- * 要将pocketbase下载到的地方
- * @type {string} 
- */
-const POCKETBASE_DOWNLOAD_DIR = path.resolve(__dirname, "../pocketbase-release-file");
-
-
 // === 导出配置 ===
 module.exports = {
   PROJECT_NAME,
+  PROJECT_ROOT_DIR,
   POCKETBASE_VERSION,
   POCKETBASE_PLATFORMS,
   POCKETBASE_DOWNLOAD_URL_FN,

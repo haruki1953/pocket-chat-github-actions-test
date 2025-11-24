@@ -8,7 +8,12 @@
 const fs = require("fs");
 const path = require("path");
 const archiver = require("archiver");
-const { PROJECT_NAME, POCKETBASE_VERSION, POCKETBASE_PLATFORMS } = require("./project-config");
+const { 
+  PROJECT_NAME, 
+  POCKETBASE_VERSION, 
+  POCKETBASE_PLATFORMS, 
+  PROJECT_ROOT_DIR 
+} = require("./project-config");
 
 // === 参数解析 ===
 /** @type {string|undefined} */
@@ -24,7 +29,7 @@ if (version == null) {
 // 上面初始接收的 version 变量名帮我重命名，我想让最终的结果为 version
 
 // === 路径定义 ===
-const ROOT = path.resolve(__dirname, "..");
+const ROOT = PROJECT_ROOT_DIR
 const OUT_DIR = path.join(ROOT, "out", version);
 const DIST_DIR = path.join(OUT_DIR, "dist");
 const RELEASE_DIR = path.join(OUT_DIR, "release");
