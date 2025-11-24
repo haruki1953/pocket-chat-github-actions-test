@@ -8,11 +8,11 @@
 const fs = require("fs");
 const path = require("path");
 const archiver = require("archiver");
-const { 
-  PROJECT_NAME, 
-  POCKETBASE_VERSION, 
-  POCKETBASE_PLATFORMS, 
-  PROJECT_ROOT_DIR 
+const {
+  PROJECT_NAME,
+  POCKETBASE_VERSION,
+  POCKETBASE_PLATFORMS,
+  PROJECT_ROOT_DIR
 } = require("./project-config");
 
 // === 参数解析 ===
@@ -149,7 +149,11 @@ ensureDir(DIST_DIR);
 ensureDir(RELEASE_DIR);
 
 (async () => {
-  for (const platform of POCKETBASE_PLATFORMS) {
+  /** 
+   * 封装单个平台的打包逻辑
+   * @param {string} platform 当前版本号
+   */
+  async function buildPlatform(platform) {
     const outName = `${PROJECT_NAME}_${version}_${platform}`;
     const outPath = path.join(DIST_DIR, outName);
 
@@ -183,4 +187,7 @@ ensureDir(RELEASE_DIR);
     await zipDir(outPath, zipFile);
     console.log(`✅ 已生成: ${zipFile}`);
   }
+
+  // 并行执行所有平台的打包
+  await Promise.all(POCKETBASE_PLATFORMS.map((i) => buildPlatform(i)));
 })();

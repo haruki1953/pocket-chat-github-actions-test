@@ -3,6 +3,7 @@ name: Release
 on:
   release:
     types: [published]   # 当发布 Release 时触发
+  workflow_dispatch:     # 也允许手动触发
 
 permissions:
   id-token: write        # 用于 OIDC 身份令牌，生成签名证明
@@ -69,18 +70,8 @@ jobs:
           cd ${{ github.workspace }}/project-tools-node
           pnpm install --frozen-lockfile
 
-      # 缓存 PocketBase 各平台二进制文件，避免重复下载
-      # 缓存 key 基于配置文件和下载脚本，版本更新时自动失效
-      - name: Cache PocketBase release files
-        id: pb-cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/pocketbase-release-file
-          key: pocketbase-${{ hashFiles('project-tools-node/project-config.js', 'project-tools-node/project-pocketbase-download.js') }}
-
       # 如果缓存未命中，则执行下载脚本，获取 PocketBase 各平台二进制文件
       - name: Download PocketBase release files
-        if: steps.pb-cache.outputs.cache-hit != 'true'
         run: |
           cd ${{ github.workspace }}/project-tools-node
           node project-pocketbase-download.js
