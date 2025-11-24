@@ -5,6 +5,10 @@ on:
     types: [published]   # 当发布 Release 时触发
   workflow_dispatch:     # 也允许手动触发
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 permissions:
   id-token: write        # 用于 OIDC 身份令牌，生成签名证明
   contents: write        # 需要写权限才能上传 Release 资产，同时包含读权限
@@ -26,18 +30,18 @@ jobs:
 
       # 拉取仓库代码
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       # 安装指定版本的 pnpm
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@eae0cfeb286e66ffb5155f1a79b90583a127a68b
         with:
           version: 10.8.1
 
       # 为 project-tools-node 子项目设置 Node.js 环境，并启用 pnpm 缓存
       # 使用 cache-dependency-path 指定该子项目的 lockfile，确保依赖缓存命中准确
       - name: Setup Node.js (project-tools-node)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
           cache: 'pnpm'
@@ -46,7 +50,7 @@ jobs:
       # 为 vue3 前端子项目设置 Node.js 环境，并启用 pnpm 缓存
       # 同样指定 vue3 的 lockfile，避免不同子项目的依赖缓存互相干扰
       - name: Setup Node.js (vue3)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
           cache: 'pnpm'
@@ -83,26 +87,18 @@ jobs:
           cd ${{ github.workspace }}/project-tools-node
           node project-package.js ${{ env.VERSION }}
 
-    #     # 上传 dist/ 目录作为 CI 工件，方便调试或后续 job 使用
-    #   - name: Upload dist artifacts
-    #     uses: actions/upload-artifact@v4
-    #     with:
-    #       name: dist-${{ github.ref_name }}
-    #       path: ${{ github.workspace }}/out/${{ env.VERSION }}/dist/
-
-    #     # 上传 release/ 目录作为 CI 工件，方便调试或后续 job 使用
-    #   - name: Upload release artifacts
-    #     uses: actions/upload-artifact@v4
-    #     with:
-    #       name: release-${{ github.ref_name }}
-    #       path: ${{ github.workspace }}/out/${{ env.VERSION }}/release/
-
+      # 上传 dist/ 目录作为 CI 工件，方便调试或后续 job 使用
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: out-dist
+          path: ${{ github.workspace }}/out/${{ env.VERSION }}/dist/
 
       # 将 release/*.zip 上传到 GitHub Release 页面
       # overwrite: true 表示覆盖已有同名文件
       # file_glob: true 表示允许 Action 展开通配符，把匹配到的多个文件都上传到 Release。
       - name: Upload release zips
-        uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@6b7fa9f267e90b50a19fef07b3596790bb941741
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ github.workspace }}/out/${{ env.VERSION }}/release/*.zip
@@ -113,6 +109,6 @@ jobs:
       # 生成构建证明 (artifact-attestations)，绑定到 Release 资产
       # 用户下载时可验证 zip 文件确实由 GitHub Actions 构建
       - name: Generate build provenance
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be
         with:
           subject-path: ${{ github.workspace }}/out/${{ env.VERSION }}/release/*.zip
