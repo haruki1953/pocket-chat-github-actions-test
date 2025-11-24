@@ -26,12 +26,23 @@ jobs:
         with:
           version: 10.8.1
 
-      # 设置 Node.js 环境，并启用 pnpm 缓存
-      - name: Setup Node.js
+      # 为 project-tools-node 子项目设置 Node.js 环境，并启用 pnpm 缓存
+      # 使用 cache-dependency-path 指定该子项目的 lockfile，确保依赖缓存命中准确
+      - name: Setup Node.js (project-tools-node)
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'pnpm'
+          cache-dependency-path: project-tools-node/pnpm-lock.yaml
+
+      # 为 vue3 前端子项目设置 Node.js 环境，并启用 pnpm 缓存
+      # 同样指定 vue3 的 lockfile，避免不同子项目的依赖缓存互相干扰
+      - name: Setup Node.js (vue3)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          cache-dependency-path: vue3/pnpm-lock.yaml
 
       # 安装前端依赖
       - name: Install vue3 dependencies
