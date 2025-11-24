@@ -1,0 +1,107 @@
+name: Release
+
+on:
+  release:
+    types: [published]   # 当发布 Release 时触发
+  workflow_dispatch:     # 也允许手动触发
+
+permissions:
+  id-token: write        # 用于 OIDC 身份令牌，生成签名证明
+  contents: write        # 需要写权限才能上传 Release 资产，同时包含读权限
+  attestations: write    # 写入 attestation 记录
+  packages: write        # 如果工件要发布到 GitHub Packages，需要写权限
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 拉取仓库代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 安装指定版本的 pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.8.1
+
+      # 设置 Node.js 环境，并启用 pnpm 缓存
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      # 安装前端依赖
+      - name: Install vue3 dependencies
+        run: |
+          cd ${{ github.workspace }}/vue3
+          pnpm install --frozen-lockfile
+
+      # 构建前端项目，生成 vue3/dist/
+      - name: Build frontend
+        run: |
+          cd ${{ github.workspace }}/vue3
+          pnpm build
+
+      # 安装工具脚本依赖
+      - name: Install project-tools-node dependencies
+        run: |
+          cd ${{ github.workspace }}/project-tools-node
+          pnpm install --frozen-lockfile
+
+      # 缓存 PocketBase 各平台二进制文件，避免重复下载
+      # 缓存 key 基于配置文件和下载脚本，版本更新时自动失效
+      - name: Cache PocketBase release files
+        id: pb-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/pocketbase-release-file
+          key: pocketbase-${{ hashFiles('project-tools-node/project-config.js', 'project-tools-node/project-pocketbase-download.js') }}
+
+      # 如果缓存未命中，则执行下载脚本，获取 PocketBase 各平台二进制文件
+      - name: Download PocketBase release files
+        if: steps.pb-cache.outputs.cache-hit != 'true'
+        run: |
+          cd ${{ github.workspace }}/project-tools-node
+          node project-pocketbase-download.js
+
+      # 执行打包脚本，传入版本号（去掉 v 前缀）
+      # 将输出到 out/${GITHUB_REF_NAME#v}/dist 和 out/${GITHUB_REF_NAME#v}/release
+      - name: Package project
+        run: |
+          cd ${{ github.workspace }}/project-tools-node
+          node project-package.js ${GITHUB_REF_NAME#v}
+
+    #     # 上传 dist/ 目录作为 CI 工件，方便调试或后续 job 使用
+    #   - name: Upload dist artifacts
+    #     uses: actions/upload-artifact@v4
+    #     with:
+    #       name: dist-${{ github.ref_name }}
+    #       path: ${{ github.workspace }}/out/${GITHUB_REF_NAME#v}/dist/
+
+    #     # 上传 release/ 目录作为 CI 工件，方便调试或后续 job 使用
+    #   - name: Upload release artifacts
+    #     uses: actions/upload-artifact@v4
+    #     with:
+    #       name: release-${{ github.ref_name }}
+    #       path: ${{ github.workspace }}/out/${GITHUB_REF_NAME#v}/release/
+
+
+        # 将 release/*.zip 上传到 GitHub Release 页面
+        # overwrite: true 表示覆盖已有同名文件
+      - name: Upload release zips
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ github.workspace }}/out/${GITHUB_REF_NAME#v}/release/*.zip
+          tag: ${{ github.ref }}
+          overwrite: true
+
+      # 生成构建证明 (artifact-attestations)，绑定到 Release 资产
+      # 用户下载时可验证 zip 文件确实由 GitHub Actions 构建
+      - name: Generate build provenance
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: ${{ github.workspace }}/out/${GITHUB_REF_NAME#v}/release/*.zip
