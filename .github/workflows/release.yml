@@ -3,7 +3,6 @@ name: Release
 on:
   release:
     types: [published]   # 当发布 Release 时触发
-  workflow_dispatch:     # 也允许手动触发
 
 permissions:
   id-token: write        # 用于 OIDC 身份令牌，生成签名证明
@@ -108,9 +107,9 @@ jobs:
     #       path: ${{ github.workspace }}/out/${{ env.VERSION }}/release/
 
 
-        # 将 release/*.zip 上传到 GitHub Release 页面
-        # overwrite: true 表示覆盖已有同名文件
-        # file_glob: true 表示允许 Action 展开通配符，把匹配到的多个文件都上传到 Release。
+      # 将 release/*.zip 上传到 GitHub Release 页面
+      # overwrite: true 表示覆盖已有同名文件
+      # file_glob: true 表示允许 Action 展开通配符，把匹配到的多个文件都上传到 Release。
       - name: Upload release zips
         uses: svenstaro/upload-release-action@v2
         with:
