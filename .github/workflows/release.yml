@@ -12,7 +12,8 @@ permissions:
   packages: write        # 如果工件要发布到 GitHub Packages，需要写权限
 
 jobs:
-  build-and-release:
+  # 构建前端、打包项目并上传至Release
+  build-vue3-and-project-package-and-upload-release-zips:
     runs-on: ubuntu-latest
 
     steps:
@@ -109,6 +110,7 @@ jobs:
 
         # 将 release/*.zip 上传到 GitHub Release 页面
         # overwrite: true 表示覆盖已有同名文件
+        # file_glob: true 表示允许 Action 展开通配符，把匹配到的多个文件都上传到 Release。
       - name: Upload release zips
         uses: svenstaro/upload-release-action@v2
         with:
@@ -116,6 +118,7 @@ jobs:
           file: ${{ github.workspace }}/out/${{ env.VERSION }}/release/*.zip
           tag: ${{ github.ref }}
           overwrite: true
+          file_glob: true
 
       # 生成构建证明 (artifact-attestations)，绑定到 Release 资产
       # 用户下载时可验证 zip 文件确实由 GitHub Actions 构建
