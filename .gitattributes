@@ -1,1 +1,2 @@
-*.bat -text   # Windows 批处理脚本保持 CRLF
+# Windows 批处理脚本保持 CRLF
+*.bat text eol=crlf
