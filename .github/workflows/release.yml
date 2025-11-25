@@ -121,6 +121,13 @@ jobs:
     needs: build-vue3-and-project-package-and-upload-release-zips
 
     steps:
+      # 从当前 GitHub tag 名中提取版本号，并写入环境变量 VERSION
+      # ${GITHUB_REF_NAME#v} 表示去掉 tag 前缀 "v"，例如 "v0.0.3" 会变成 "0.0.3"
+      # >> $GITHUB_ENV 会把 VERSION 变量持久化到 GitHub Actions 环境中，
+      # 后续步骤可以通过 ${{ env.VERSION }} 使用该版本号
+      - name: Extract version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
       # 拉取仓库代码
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -167,13 +174,8 @@ jobs:
           # 指定镜像的基础名称，由环境变量 REGISTRY（仓库地址）和 IMAGE_NAME（镜像名）拼接
           # 例如：ghcr.io/owner/repo 或 docker.io/username/image
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          # 配置生成镜像标签的规则：
-          # - type=ref       → 根据 GitHub 的 ref（如 refs/tags/v1.2.3）生成标签
-          # - event=tag      → 仅在 tag 事件时生成标签（比如 Release 发布时关联的 tag）
-          # - prefix=        → 去掉默认的前缀（例如 v），最终得到纯版本号（如 1.2.3）
-          # - suffix=        → 不添加任何后缀
-          tags: |
-            type=ref,event=tag,prefix=,suffix=
+          # 使用从当前 GitHub tag 名中提取的版本号
+          tags: ${{ env.VERSION }}
 
       # 步骤名称：构建并推送 Docker 镜像
       - name: Build and push Docker image
