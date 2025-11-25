@@ -16,7 +16,6 @@ FROM alpine
 
 WORKDIR /app
 
-
 ARG PB_VERSION=0.33.0
 
 RUN apk add --no-cache \
@@ -26,7 +25,6 @@ RUN apk add --no-cache \
 
 ADD https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip /tmp/pb.zip
 RUN unzip /tmp/pb.zip -d /app/
-
 
 COPY ./pocketbase/pb_hooks ./pb_hooks
 COPY ./pocketbase/pb_migrations ./pb_migrations
