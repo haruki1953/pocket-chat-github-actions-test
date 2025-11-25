@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.10] - 2025-11-25
+
+.github\workflows\release.yml 测试
+
 ## [0.0.9] - 2025-11-24
 
 .github\workflows\release.yml 测试
