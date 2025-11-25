@@ -175,7 +175,9 @@ jobs:
           # 例如：ghcr.io/owner/repo 或 docker.io/username/image
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           # 使用从当前 GitHub tag 名中提取的版本号
-          tags: ${{ env.VERSION }}
+          tags: |
+            ${{ env.VERSION }}
+            latest
 
       # 步骤名称：构建并推送 Docker 镜像
       - name: Build and push Docker image
