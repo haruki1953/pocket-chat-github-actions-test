@@ -28,7 +28,7 @@ RUN unzip /tmp/pb.zip -d /app/
 
 COPY ./pocketbase/pb_hooks ./pb_hooks
 COPY ./pocketbase/pb_migrations ./pb_migrations
-COPY ./pocketbase/start.sh ./start.sh
+COPY ./pocketbase/start_docker.sh ./start_docker.sh
 
 COPY --from=build-dist /app/dist ./pb_public
 
@@ -36,4 +36,4 @@ RUN chmod +x pocketbase
 
 EXPOSE 58090
 
-ENTRYPOINT ["sh", "start.sh"]
+ENTRYPOINT ["sh", "start_docker.sh"]

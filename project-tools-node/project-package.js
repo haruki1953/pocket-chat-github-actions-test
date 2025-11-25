@@ -165,6 +165,7 @@ ensureDir(RELEASE_DIR);
     copyRecursive(path.join(ROOT, "pocketbase", "start.bat"), path.join(outPath, "start.bat"));
     copyRecursive(path.join(ROOT, "pocketbase", "start.sh"), path.join(outPath, "start.sh"));
     copyRecursive(path.join(ROOT, "pocketbase", "start_mac.sh"), path.join(outPath, "start_mac.sh"));
+    copyRecursive(path.join(ROOT, "pocketbase", "start_docker.sh"), path.join(outPath, "start_docker.sh"));
 
     // 2. pb_public 来自 vue3/dist
     copyRecursive(path.join(ROOT, "vue3", "dist"), path.join(outPath, "pb_public"));

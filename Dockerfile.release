@@ -1,11 +1,10 @@
-FROM alpine
+FROM alpine:3.19.9
 
 WORKDIR /app
 
 # 安装根证书，确保容器内的 PocketBase 等服务能正常进行 HTTPS/TLS 通信
 RUN apk add --no-cache \
-    ca-certificates \
-    bash
+    ca-certificates
 
 # Dockerfile.release 专用于 CI/CD .github\workflows\release.yml
 # 注意：如果在本地构建，需要你手动准备好 docker-build 文件夹，或使用本项目中另一个 Dockerfile
@@ -20,4 +19,4 @@ RUN chmod +x pocketbase
 EXPOSE 58090
 
 # 设置容器启动时的入口点，执行 start.sh 脚本
-ENTRYPOINT ["sh", "start.sh"]
+ENTRYPOINT ["sh", "start_docker.sh"]
