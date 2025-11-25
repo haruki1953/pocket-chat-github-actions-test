@@ -169,22 +169,22 @@ jobs:
         # 给这个步骤一个 ID，后续步骤可以通过 steps.meta.outputs 引用它的输出
         id: meta
         # 使用官方的 docker/metadata-action，用来自动生成镜像的标签和元数据
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        uses: docker/metadata-action@v4
         with:
           # 指定镜像的基础名称，由环境变量 REGISTRY（仓库地址）和 IMAGE_NAME（镜像名）拼接
           # 例如：ghcr.io/owner/repo 或 docker.io/username/image
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           # 使用从当前 GitHub tag 名中提取的版本号
           tags: |
-            ${{ env.VERSION }}
-            latest
+            type=raw,value=${{ env.VERSION }}
+            type=raw,value=latest
 
       # 步骤名称：构建并推送 Docker 镜像
       - name: Build and push Docker image
         # 给这个步骤一个 ID，后续步骤可以通过 steps.push.outputs 引用它的输出
         id: push
         # 使用官方的 docker/build-push-action 来执行构建和推送操作
-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        uses: docker/build-push-action@v4
         with:
           # 构建上下文目录，通常是仓库根目录（.）
           context: .
