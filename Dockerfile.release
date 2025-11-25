@@ -1,10 +1,11 @@
-FROM alpine:3.19.9
+FROM alpine
 
 WORKDIR /app
 
 # 安装根证书，确保容器内的 PocketBase 等服务能正常进行 HTTPS/TLS 通信
 RUN apk add --no-cache \
-    ca-certificates   
+    ca-certificates \
+    bash
 
 # Dockerfile.release 专用于 CI/CD .github\workflows\release.yml
 # 注意：如果在本地构建，需要你手动准备好 docker-build 文件夹，或使用本项目中另一个 Dockerfile
