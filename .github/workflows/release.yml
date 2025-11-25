@@ -138,22 +138,6 @@ jobs:
         with:
           name: out-dist
           path: ${{ github.workspace }}/docker-temp
-      
-      # 准备 docker-build 目录
-      - name: Prepare docker-build folder
-        run: |
-          # 在 docker-temp 文件夹中查找以 linux_amd64 结尾的目录（只查找第一层）
-          AMD64_DIR=$(find "${{ github.workspace }}/docker-temp" -maxdepth 1 -type d -name "*linux_amd64")
-          echo "Found amd64 dir: $AMD64_DIR"   # 打印找到的目录路径，方便调试
-      
-          # 删除旧的 docker-build 文件夹，避免残留文件影响新的构建
-          rm -rf "${{ github.workspace }}/docker-build"
-      
-          # 创建新的 docker-build 文件夹（-p 表示父目录不存在时也一并创建，且目录已存在时不报错）
-          mkdir -p "${{ github.workspace }}/docker-build"
-      
-          # 将找到的 amd64 目录里的所有文件复制到 docker-build 文件夹中
-          cp -r "$AMD64_DIR"/* "${{ github.workspace }}/docker-build/"
 
       # https://docs.github.com/zh/actions/tutorials/publish-packages/publish-docker-images#%E5%8F%91%E5%B8%83%E6%98%A0%E5%83%8F%E5%88%B0-github-packages
       # 登录到容器镜像仓库
@@ -179,6 +163,15 @@ jobs:
             type=raw,value=${{ env.VERSION }}
             type=raw,value=latest
 
+      # 步骤名称：安装并启用 QEMU，用于在当前 runner 上模拟其他 CPU 架构
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      # 步骤名称：安装并配置 Docker Buildx，支持多架构构建和高级构建功能
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
       # 步骤名称：构建并推送 Docker 镜像
       - name: Build and push Docker image
         # 给这个步骤一个 ID，后续步骤可以通过 steps.push.outputs 引用它的输出
@@ -188,6 +181,10 @@ jobs:
         with:
           # 构建上下文目录，通常是仓库根目录（.）
           context: .
+          # 指定使用前面 Buildx 步骤创建的构建器名称
+          builder: ${{ steps.buildx.outputs.name }}
+          # 定义要构建并推送的多架构平台列表
+          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/ppc64le,linux/s390x
           # 指定 Dockerfile 文件，这里用的是 Dockerfile.release
           file: Dockerfile.release
           # 是否推送镜像到远程仓库，true 表示推送
