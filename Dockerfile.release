@@ -1,0 +1,18 @@
+FROM alpine3.19.9 
+
+WORKDIR /app
+
+# Dockerfile.release 专用于 CI/CD .github\workflows\release.yml
+# 注意：如果在本地构建，需要你手动准备好 docker-build 文件夹，或使用本项目中另一个 Dockerfile
+# docker-build 文件夹内容即为本项目 release 的 .zip 文件解压后的内容。
+# 将 CI/CD 准备好的 docker-build 文件夹里的全部内容复制到镜像的 /app 目录。
+COPY ./docker-build .
+
+# 确保 pocketbase 二进制文件有执行权限
+RUN chmod +x pocketbase
+
+# 暴露容器端口 58090，PocketBase 会在这个端口提供服务
+EXPOSE 58090
+
+# 设置容器启动时的入口点，执行 start.sh 脚本
+ENTRYPOINT ["sh", "start.sh"]
