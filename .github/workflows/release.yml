@@ -196,10 +196,15 @@ jobs:
           # 包含源码地址、版本号、commit SHA、构建时间等信息
           labels: ${{ steps.meta.outputs.labels }}
       
-      # # 生成并推送镜像的供应链溯源证明（artifact attestation），确保可追溯性与安全性 
-      # - name: Generate artifact attestation
-      #   uses: actions/attest-build-provenance@v3
-      #   with:
-      #     subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
-      #     subject-digest: ${{ steps.push.outputs.digest }}
-      #     push-to-registry: true
+      # 生成镜像的供应链溯源证明（artifact attestation）
+      # 按照规范本应设置 push-to-registry: true，将证明随镜像一起推送到 GHCR，
+      # 但由于 GHCR UI 会额外显示 digest 标签，导致页面出现两行不同的条目，
+      # 为避免混淆，这里改为 push-to-registry: false。
+      # 即使不推送到镜像仓库，证明仍会生成并保存在 GitHub，
+      # 可在 https://github.com/<owner>/<repo>/attestations 页面查看和下载。
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: false
