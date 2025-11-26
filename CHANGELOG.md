@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.0.21-test] - 2025-11-25
+## [0.0.21-prerelease-test] - 2025-11-26
+
+.github\workflows\release.yml 测试 prerelease
+
+## [0.0.21-test] - 2025-11-26
 
 .github\workflows\release.yml 测试 带后缀的版本号
 

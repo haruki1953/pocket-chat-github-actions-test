@@ -21,6 +21,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Print release info
+        run: |
+          echo "Tag (github.event.release.tag_name): ${{ github.event.release.tag_name }}"
+          echo "Is prerelease (github.event.release.prerelease): ${{ github.event.release.prerelease }}"
+
       # 从当前 GitHub tag 名中提取版本号，并写入环境变量 VERSION
       # ${GITHUB_REF_NAME#v} 表示去掉 tag 前缀 "v"，例如 "v0.0.3" 会变成 "0.0.3"
       # >> $GITHUB_ENV 会把 VERSION 变量持久化到 GitHub Actions 环境中，
@@ -159,9 +164,10 @@ jobs:
           # 例如：ghcr.io/owner/repo 或 docker.io/username/image
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           # 使用从当前 GitHub tag 名中提取的版本号
+          # prerelease 时不加 latest
           tags: |
             type=raw,value=${{ env.VERSION }}
-            type=raw,value=latest
+            ${{ github.event.release.prerelease && '' || 'type=raw,value=latest' }}
 
       # 步骤名称：安装并启用 QEMU，用于在当前 runner 上模拟其他 CPU 架构
       - name: Set up QEMU
