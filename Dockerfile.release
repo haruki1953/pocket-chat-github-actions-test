@@ -32,6 +32,10 @@ RUN set -eux; \
     \
     # 在 docker-temp 中查找以当前平台结尾的目录（只查找第一层）
     PLATFORM_DIR=$(find /app/docker-temp -maxdepth 1 -type d -name "*${DOCKER_BUILD_PLATFORM}"); \
+    if [ -z "$PLATFORM_DIR" ]; then \
+        echo "ERROR: No platform directory found for ${DOCKER_BUILD_PLATFORM}"; \
+        exit 1; \
+    fi; \
     echo "Found platform dir: $PLATFORM_DIR"; \
     \
     # 创建 docker-build 文件夹
