@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # 获取脚本所在目录
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"

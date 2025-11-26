@@ -36,8 +36,6 @@ const POCKETBASE_PLATFORMS = [
  */
 const POCKETBASE_DOWNLOAD_URL_FN = (platformStr) => {
   return `https://github.com/pocketbase/pocketbase/releases/download/v${POCKETBASE_VERSION}/pocketbase_${POCKETBASE_VERSION}_${platformStr}.zip`
-  // 【251123】为了测试时不再浪费时间下载，临时改为本地模拟的下载链接
-  // return `http://127.0.0.1:5500/pocketbase_${POCKETBASE_VERSION}_${platformStr}.zip`
 }
 
 // === 导出配置 ===
