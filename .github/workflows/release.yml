@@ -196,10 +196,10 @@ jobs:
           # 包含源码地址、版本号、commit SHA、构建时间等信息
           labels: ${{ steps.meta.outputs.labels }}
       
-      # 生成并推送镜像的供应链溯源证明（artifact attestation），确保可追溯性与安全性 
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v3
-        with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+      # # 生成并推送镜像的供应链溯源证明（artifact attestation），确保可追溯性与安全性 
+      # - name: Generate artifact attestation
+      #   uses: actions/attest-build-provenance@v3
+      #   with:
+      #     subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+      #     subject-digest: ${{ steps.push.outputs.digest }}
+      #     push-to-registry: true
