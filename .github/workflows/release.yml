@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 打印 Release 信息，prerelease
       - name: Print release info
         run: |
           echo "Tag (github.event.release.tag_name): ${{ github.event.release.tag_name }}"
@@ -167,7 +168,7 @@ jobs:
           # prerelease 时不加 latest
           tags: |
             type=raw,value=${{ env.VERSION }}
-            ${{ github.event.release.prerelease && '' || 'type=raw,value=latest' }}
+            type=raw,value=latest,enable=${{ github.event.release.prerelease == false }}
 
       # 步骤名称：安装并启用 QEMU，用于在当前 runner 上模拟其他 CPU 架构
       - name: Set up QEMU
