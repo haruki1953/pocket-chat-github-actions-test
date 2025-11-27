@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2025-11-27
+
+<details>
+<summary>📝 查看中文版本 (Chinese Version)</summary>
+
+### 新增
+
+- 添加 Claude Code GitHub 工作流程 by @niracler in [#1](https://github.com/haruki1953/pocket-chat/pull/1)
+- 支持使用 Docker 构建 by @Ecss11 in [#4](https://github.com/haruki1953/pocket-chat/pull/4)
+- 实现新消息提示 by @haruki1953 in [#5](https://github.com/haruki1953/pocket-chat/pull/5)
+- 实现桌面消息通知，实现pb实时订阅断线重连时消息补偿 by @haruki1953 in [#6](https://github.com/haruki1953/pocket-chat/pull/6)
+- 通过github actions实现 项目打包并上传至release、docker打包与推送 by @haruki1953 in [#7](https://github.com/haruki1953/pocket-chat/pull/7)
+
+### 修改
+
+- 消息发送快捷键从 `Shift + Enter` 改为 `Alt + Enter`
+
+</details>
+
+### Added
+
+- Add Claude Code GitHub Workflow by @niracler in [#1](https://github.com/haruki1953/pocket-chat/pull/1)
+- Support build with docker by @Ecss11 in [#4](https://github.com/haruki1953/pocket-chat/pull/4)
+Here’s the English translation of your text:
+- Implemented new message alerts by @haruki1953 in [#5](https://github.com/haruki1953/pocket-chat/pull/5)  
+- Implemented desktop message notifications, with pb real-time subscription reconnection and message compensation by @haruki1953 in [#6](https://github.com/haruki1953/pocket-chat/pull/6)  
+- Implemented project packaging via GitHub Actions, uploading to release, and Docker build & push by @haruki1953 in [#7](https://github.com/haruki1953/pocket-chat/pull/7)  
+
+### Changed
+
+- The message sending shortcut has been changed from Shift + Enter to Alt + Enter.
+
 ## [0.0.1] - 2025-11-16
 
 ### Changed

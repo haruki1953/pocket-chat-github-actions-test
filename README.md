@@ -8,17 +8,34 @@
 
 <p align="center">
   <!-- Vue.js -->
-  <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue.js">
+  <a href="https://vuejs.org/" target="_blank">
+    <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue.js">
+  </a>
   <!-- TailwindCSS -->
-  <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+  <a href="https://tailwindcss.com/" target="_blank">
+    <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+  </a>
   <!-- TanStack Query -->
-  <img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query">
+  <a href="https://tanstack.com/query/latest" target="_blank">
+    <img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query">
+  </a>
   <!-- PocketBase -->
-  <img src="https://img.shields.io/badge/PocketBase-0E83CD?style=for-the-badge&logo=pocketbase&logoColor=white" alt="PocketBase">
+  <a href="https://pocketbase.io/" target="_blank">
+    <img src="https://img.shields.io/badge/PocketBase-0E83CD?style=for-the-badge&logo=pocketbase&logoColor=white" alt="PocketBase">
+  </a>
   </br>
-  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License">
-  <img src="https://img.shields.io/github/release/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Release">
-  <img src="https://img.shields.io/github/commit-activity/m/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Activity">
+  <!-- License -->
+  <a href="https://opensource.org/licenses/MIT" target="_blank">
+    <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License">
+  </a>
+  <!-- GitHub Release -->
+  <a href="https://github.com/haruki1953/pocket-chat/releases" target="_blank">
+    <img src="https://img.shields.io/github/release/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Release">
+  </a>
+  <!-- GitHub Activity -->
+  <a href="https://github.com/haruki1953/pocket-chat/commits" target="_blank">
+    <img src="https://img.shields.io/github/commit-activity/m/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Activity">
+  </a>
 </p>
 
 
@@ -27,18 +44,40 @@
 </p>
 
 - PocketChat is an open-source real-time chat platform built on [PocketBase](https://github.com/pocketbase/pocketbase) and [Vue3](https://github.com/vuejs/vue).
-- Cross-platform support for Linux, Windows, and macOS. Easy deployment — on Windows, simply extract and run.
+- Cross-platform support for Linux, Windows, and macOS. Easy deployment: can be run on Windows after extraction. Supports Docker deployment.
 - Supports GitHub, X/Twitter, and other OAuth2 login/registration methods.
 - Supports message reply, edit, delete, and jumping to a message via its link.
+- Supports in-site new message notifications and desktop new message notifications.
 - Project address: https://github.com/haruki1953/pocket-chat
 - Live demo: https://sakiko.top
 
 ![](./assets/Snipaste_2025-11-16_16-03-05.png)
 ![](./assets/Snipaste_2025-11-16_16-00-27.png)
 
+<details>
+<summary>📸 <b>More Screenshots</b></summary>
+
+![](./assets/Snipaste_2025-11-26_19-39-09.png)
+![](./assets/Snipaste_2025-11-26_19-30-04.png)
+
+</details>
+
+---
+
+<details>
+<summary>💡 <b>Development Plan</b></summary>
+
+- Image and file sending functionality
+- User list and online status display
+- User @ mention functionality
+
+</details>
+
 ## Deployment
 
 Before deploying on Linux, it is recommended to try it first on Windows to get familiar with PocketChat.
+
+Since version v0.1.0, [Docker deployment](#deploy-with-docker) has been supported.
 
 ### Quick Start on Windows
 
@@ -170,6 +209,24 @@ systemctl restart pocketchat
 systemctl stop pocketchat
 # Disable boot start
 systemctl disable pocketchat
+```
+
+### Deploy with Docker
+
+You can find the latest image at: https://github.com/haruki1953/pocket-chat/pkgs/container/pocket-chat
+
+```sh
+mkdir -p ${HOME}/PocketChat/pb_data
+cd ${HOME}/PocketChat
+
+docker run -d \
+  --name PocketChat \
+  -v ${HOME}/PocketChat/pb_data:/app/pb_data \
+  -p 58090:58090 \
+  --restart unless-stopped \
+  ghcr.io/haruki1953/pocket-chat:latest
+
+docker logs PocketChat
 ```
 
 ## Required Post-Deployment Steps

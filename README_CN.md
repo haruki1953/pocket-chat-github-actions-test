@@ -8,17 +8,34 @@
 
 <p align="center">
   <!-- Vue.js -->
-  <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue.js">
+  <a href="https://vuejs.org/" target="_blank">
+    <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue.js">
+  </a>
   <!-- TailwindCSS -->
-  <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+  <a href="https://tailwindcss.com/" target="_blank">
+    <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+  </a>
   <!-- TanStack Query -->
-  <img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query">
+  <a href="https://tanstack.com/query/latest" target="_blank">
+    <img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query">
+  </a>
   <!-- PocketBase -->
-  <img src="https://img.shields.io/badge/PocketBase-0E83CD?style=for-the-badge&logo=pocketbase&logoColor=white" alt="PocketBase">
+  <a href="https://pocketbase.io/" target="_blank">
+    <img src="https://img.shields.io/badge/PocketBase-0E83CD?style=for-the-badge&logo=pocketbase&logoColor=white" alt="PocketBase">
+  </a>
   </br>
-  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License">
-  <img src="https://img.shields.io/github/release/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Release">
-  <img src="https://img.shields.io/github/commit-activity/m/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Activity">
+  <!-- License -->
+  <a href="https://opensource.org/licenses/MIT" target="_blank">
+    <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License">
+  </a>
+  <!-- GitHub Release -->
+  <a href="https://github.com/haruki1953/pocket-chat/releases" target="_blank">
+    <img src="https://img.shields.io/github/release/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Release">
+  </a>
+  <!-- GitHub Activity -->
+  <a href="https://github.com/haruki1953/pocket-chat/commits" target="_blank">
+    <img src="https://img.shields.io/github/commit-activity/m/haruki1953/pocket-chat.svg?style=for-the-badge" alt="GitHub Activity">
+  </a>
 </p>
 
 
@@ -28,18 +45,40 @@
 
 
 - PocketChat 是一个基于 [PocketBase](https://github.com/pocketbase/pocketbase) 与 [Vue3](https://github.com/vuejs/vue) 的开源实时聊天平台。
-- 跨平台支持 linux、windows、macos 。部署便捷，可在 windows 上解压后运行。
+- 跨平台支持 linux、windows、macos 。部署便捷，可在 windows 上解压后运行。支持 docker 部署。
 - 支持配置 Github、X/Twitter 等 OAuth2 登录/注册方式。
 - 支持消息回复、编辑、删除等操作，支持通过消息链接定位访问消息。
+- 支持网站内新消息通知，支持桌面新消息通知。
 - 项目地址 https://github.com/haruki1953/pocket-chat
 - 预览 https://sakiko.top
 
 ![](./assets/Snipaste_2025-11-16_16-03-05.png)
 ![](./assets/Snipaste_2025-11-16_16-00-27.png)
 
+<details>
+<summary>📸 <b>更多截图</b></summary>
+
+![](./assets/Snipaste_2025-11-26_19-39-09.png)
+![](./assets/Snipaste_2025-11-26_19-30-04.png)
+
+</details>
+
+---
+
+<details>
+<summary>💡 <b>开发计划</b></summary>
+
+- 图片、文件发送功能
+- 用户列表、在线状态显示功能
+- 用户@功能
+
+</details>
+
 ## 部署
 
-在 linux 上部署前，建议先在 windows 上尝试以便了解 PocketChat
+在 linux 上部署前，建议先在 windows 上尝试以便了解 PocketChat。
+
+v0.1.0 版本后已支持 [使用 docker 部署](#使用-docker-部署)。
 
 ### 在 windows 上快速尝试
 
@@ -183,6 +222,24 @@ systemctl restart pocketchat
 systemctl stop pocketchat
 # 取消开机自启
 systemctl disable pocketchat
+```
+
+### 使用 docker 部署
+
+可在此查看最新镜像： https://github.com/haruki1953/pocket-chat/pkgs/container/pocket-chat
+
+```sh
+mkdir -p ${HOME}/PocketChat/pb_data
+cd ${HOME}/PocketChat
+
+docker run -d \
+  --name PocketChat \
+  -v ${HOME}/PocketChat/pb_data:/app/pb_data \
+  -p 58090:58090 \
+  --restart unless-stopped \
+  ghcr.io/haruki1953/pocket-chat:latest
+
+docker logs PocketChat
 ```
 
 ## 部署后的务必进行的操作
