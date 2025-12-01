@@ -110,6 +110,7 @@ export type ImagesRecord = {
 	imageHeight?: number
 	imageSmall?: string
 	imageWidth?: number
+	isDeleted?: boolean
 	updated?: IsoDateString
 }
 
@@ -118,6 +119,7 @@ export type MessagesRecord = {
 	content?: string
 	created?: IsoDateString
 	id: string
+	images?: RecordIdString[]
 	isDeleted?: boolean
 	replyMessage?: RecordIdString
 	updated?: IsoDateString

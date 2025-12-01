@@ -878,10 +878,10 @@
     },
     {
         "id": "pbc_3607937828",
-        "listRule": null,
-        "viewRule": null,
-        "createRule": null,
-        "updateRule": null,
+        "listRule": "// 用户已登录，可以查看\n@request.auth.id != \"\" ||\n// 根据config，判断是否允许未登录用户查看\n(\n  @collection.config.key ?= 'allow-anonymous-view' &&\n  @collection.config.value ?= true\n)",
+        "viewRule": "// 用户已登录，可以查看\n@request.auth.id != \"\" ||\n// 根据config，判断是否允许未登录用户查看\n(\n  @collection.config.key ?= 'allow-anonymous-view' &&\n  @collection.config.value ?= true\n)",
+        "createRule": "// 创建时需登录\n@request.auth.id != \"\" &&\n// 创建时需为创建者（传入的author需为当前用户）\n@request.auth.id = @request.body.author",
+        "updateRule": "// 修改需登录\n@request.auth.id != \"\" &&\n// 修改需为创建者\n@request.auth.id = author.id &&\n// 禁止修改author\n@request.body.author:isset = false",
         "deleteRule": null,
         "name": "images",
         "type": "base",
@@ -917,7 +917,8 @@
                 "system": false,
                 "thumbs": [
                     "100x100f",
-                    "200x200f"
+                    "200x200f",
+                    "600x600f"
                 ],
                 "type": "file"
             },
@@ -989,6 +990,15 @@
                 "required": true,
                 "system": false,
                 "type": "relation"
+            },
+            {
+                "hidden": false,
+                "id": "bool2382110195",
+                "name": "isDeleted",
+                "presentable": false,
+                "required": false,
+                "system": false,
+                "type": "bool"
             },
             {
                 "hidden": false,
@@ -1086,6 +1096,19 @@
                 "required": false,
                 "system": false,
                 "type": "bool"
+            },
+            {
+                "cascadeDelete": false,
+                "collectionId": "pbc_3607937828",
+                "hidden": false,
+                "id": "relation3760176746",
+                "maxSelect": 4,
+                "minSelect": 0,
+                "name": "images",
+                "presentable": false,
+                "required": false,
+                "system": false,
+                "type": "relation"
             },
             {
                 "hidden": false,
