@@ -14,6 +14,7 @@ import {
   useChatInputBarDispaly,
 } from './composables'
 import { RouterLink } from 'vue-router'
+import { useElementSize } from '@vueuse/core'
 
 const props = defineProps<{
   /** 房间id，空字符串为全局聊天 */
@@ -97,10 +98,13 @@ defineExpose({
   chatMessageIsRealtimeTimeout,
   chatMessageIsRealtimeTimeoutSet,
 })
+
+const refCharInputBar = ref<HTMLElement | null>(null)
+const { height: refCharInputBarHeight } = useElementSize(refCharInputBar)
 </script>
 
 <template>
-  <div class="chat-input-bar relative flow-root">
+  <div ref="refCharInputBar" class="chat-input-bar relative flow-root">
     <!-- 展开菜单 -->
     <Transition name="fade-up-down">
       <div
@@ -127,18 +131,18 @@ defineExpose({
           </template>
         </ChatTopBarMoreMenuItem>
         <!-- 菜单项 文件 -->
-        <ChatTopBarMoreMenuItem @click="() => {}">
+        <!-- <ChatTopBarMoreMenuItem @click="() => {}">
           <template #icon>
             <RiFolderLine size="18px"></RiFolderLine>
           </template>
           <template #text>
             {{ i18nStore.t('chatInputBarBackMenuFile')() }}
           </template>
-        </ChatTopBarMoreMenuItem>
+        </ChatTopBarMoreMenuItem> -->
         <!-- 垫片 -->
         <div
           :style="{
-            height: `${chatInputBarDefaultHeightConfig}px`,
+            height: `${refCharInputBarHeight + 12}px`,
           }"
         ></div>
       </div>
