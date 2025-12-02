@@ -25,6 +25,10 @@ export const routerDict = {
     path: '/login',
     name: 'LoginPage',
   },
+  ImageSelectPage: {
+    path: '/image-select',
+    name: 'ImageSelectPage',
+  },
 } as const satisfies Record<string, RouterItem>
 
 // // 路由信息字典，导出以便整个程序中使用

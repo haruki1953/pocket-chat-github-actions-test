@@ -122,7 +122,9 @@ const { height: refCharInputBarHeight } = useElementSize(refCharInputBar)
           </div>
         </div>
         <!-- 菜单项 图片 -->
-        <ChatTopBarMoreMenuItem @click="() => {}">
+        <ChatTopBarMoreMenuItem
+          @click="$router.push(routerDict.ImageSelectPage.path)"
+        >
           <template #icon>
             <RiImageLine size="18px"></RiImageLine>
           </template>

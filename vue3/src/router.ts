@@ -1,14 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { pbCollectionConfigDefaultGetFn, routerDict } from './config'
 
-import { ChatHome, ChatSetting, LayoutSimple, LoginPage } from './views'
 import {
-  useAuthStore,
+  ChatHome,
+  ChatSetting,
+  ImageSelectPage,
+  LayoutSimple,
+  LoginPage,
+} from './views'
+import {
   usePlaceholderDataPbCollectionConfigStore,
   useRouterHistoryStore,
 } from './stores'
 import { getAppMainElScrollbarWrap } from './utils'
-import { usePbCollectionConfigQuery } from './queries'
 import { pb } from './lib'
 
 // 路由
@@ -31,6 +35,10 @@ const router = createRouter({
         {
           ...routerDict.ChatSetting,
           component: ChatSetting,
+        },
+        {
+          ...routerDict.ImageSelectPage,
+          component: ImageSelectPage,
         },
       ],
     },

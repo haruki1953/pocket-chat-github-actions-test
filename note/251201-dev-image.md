@@ -6,5 +6,6 @@
 路由添加图片选择页
 src\views
 src\router.ts
-
+src\config\router.ts
+src\components\chat\chat-col\components\chat-input-bar\ChatInputBar.vue
 ```
