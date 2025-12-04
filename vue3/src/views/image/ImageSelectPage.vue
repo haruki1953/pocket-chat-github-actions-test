@@ -4,6 +4,7 @@ import {
   ImagePageBottomBar,
   ImagePageControlPanel,
   ImagePageTopBar,
+  ImagePageUploadList,
 } from './components'
 </script>
 
@@ -34,6 +35,9 @@ import {
                   </div>
                   <!-- <div class="my-4 h-[1200px] bg-red-950"></div> -->
                   <!-- 上传列表 -->
+                  <div class="mt-4">
+                    <ImagePageUploadList></ImagePageUploadList>
+                  </div>
                   <!-- 图片预览 -->
                 </div>
               </template>

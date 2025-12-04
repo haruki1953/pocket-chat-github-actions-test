@@ -19,3 +19,11 @@ src\components\chat\chat-col\components\chat-input-bar\ChatInputBar.vue
 
 上传功能
 ```
+
+灵感创意
+```
+图片上传列表中的图标，悬停时在列表标题显示功能描述
+图片行列动态适配：无论图片总数如何，都可以以指定的列数显示 useBalancedGrid
+图片所缩略图改为 600x400f
+图片集合增加 关键词 keyword 字段，主要用于搜索
+```

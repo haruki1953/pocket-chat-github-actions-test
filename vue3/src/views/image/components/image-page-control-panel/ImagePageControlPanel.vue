@@ -16,12 +16,14 @@ const searchInputContent = ref('')
             <div class="mr-[8px]">
               <RiImageAddLine></RiImageAddLine>
             </div>
-            <div class="truncate text-[14px] font-bold">上传图片</div>
+            <div class="select-none truncate text-[14px] font-bold">
+              上传图片
+            </div>
           </div>
         </div>
       </div>
       <!-- 分割线 -->
-      <div class="border border-color-background"></div>
+      <div class="border-t-[3px] border-color-background"></div>
       <!-- 全部图片 我的图片 -->
       <div>
         <div class="flex items-stretch">
@@ -41,7 +43,7 @@ const searchInputContent = ref('')
               </div>
             </div>
           </div>
-          <div class="border border-color-background"></div>
+          <div class="border-l-[3px] border-color-background"></div>
           <div class="flex-1">
             <div class="flow-root cursor-pointer">
               <div class="mx-[10px] mb-[12px] mt-[10px]">
@@ -61,7 +63,7 @@ const searchInputContent = ref('')
         </div>
       </div>
       <!-- 分割线 -->
-      <div class="border border-color-background"></div>
+      <div class="border-t-[3px] border-color-background"></div>
       <!-- 搜索栏 -->
       <div class="search-input-box">
         <div class="my-2 flex items-stretch">

@@ -8,3 +8,4 @@ export {
 }
 
 export * from './image-page-control-panel'
+export * from './image-page-upload-list'
