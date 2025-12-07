@@ -15,9 +15,10 @@ src\components\chat\chat-col\components\chat-input-bar\ChatInputBar.vue
 上传中图片样式
 图片预览样式
 图片列表样式
-响应式布局
 
 上传功能
+
+响应式布局
 ```
 
 灵感创意
@@ -26,4 +27,12 @@ src\components\chat\chat-col\components\chat-input-bar\ChatInputBar.vue
 图片行列动态适配：无论图片总数如何，都可以以指定的列数显示 useBalancedGrid
 图片所缩略图改为 600x400f
 图片集合增加 关键词 keyword 字段，主要用于搜索
+```
+
+上传功能
+```
+简单上传实现
+上传列表实现
+上传进度实现
+图片处理实现
 ```

@@ -118,7 +118,7 @@
                     <div
                       class="mx-[24px] my-[12px] select-none text-center text-[14px] font-bold italic text-color-text-soft"
                     >
-                      没有更多了
+                      没有更多了...
                     </div>
                   </div>
                 </div>
