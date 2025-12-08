@@ -28,7 +28,6 @@ const timeout = 5000 as const
 
 export const axiosConfig = {
   baseUrl,
-  timeout,
 }
 
 export const pocketbaseConfig = {

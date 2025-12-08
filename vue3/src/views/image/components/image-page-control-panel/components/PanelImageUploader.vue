@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import { pbImageUploadApi } from '@/api'
 import type { UploadFile } from 'element-plus'
 
-const imageUploadAdd = (uploadFile: UploadFile) => {
+/*
+关于图片上传的实现，自己的一些看法
+*/
+
+const imageUploadAdd = async (uploadFile: UploadFile) => {
+  await pbImageUploadApi(uploadFile)
   console.log(uploadFile)
   /*
 {
