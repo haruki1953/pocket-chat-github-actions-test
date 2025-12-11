@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { i18nLocaleInfo } from './config'
-import { useI18nStore, useRealtimeMessagesStore } from './stores'
+import {
+  useI18nStore,
+  useRealtimeMessagesStore,
+  useUploadImageStore,
+} from './stores'
 import { useDark } from '@vueuse/core'
 import { computed } from 'vue'
 import { darkTheme, lightTheme } from 'naive-ui'
@@ -74,6 +78,10 @@ useWatchAllowAnonymousViewAndAuthStoreIsValidCheckRouterLoginPage()
 
 // 请求通知权限，并在成功时提示
 useInitWebNotif()
+
+// 初始化图片上传系统
+const uploadImageStore = useUploadImageStore()
+uploadImageStore.initialize()
 
 const isDark = useDark()
 

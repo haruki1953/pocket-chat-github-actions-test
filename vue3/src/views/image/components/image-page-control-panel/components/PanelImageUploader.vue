@@ -1,44 +1,12 @@
 <script setup lang="ts">
 import { pbImageUploadApi, pbImageUploadWithAxios } from '@/api'
+import { useUploadImageStore } from '@/stores'
 import type { UploadFile } from 'element-plus'
 
-const imageUploadAdd = async (uploadFile: UploadFile) => {
-  // await pbImageUploadApi(uploadFile)
-  const res = await pbImageUploadWithAxios(uploadFile)
-  console.log(res)
-  console.log(uploadFile)
-  /*
-{
-    "name": "0e64b07abb80542fe4af7db59ca11c9d14163774.jpg",
-    "percentage": 0,
-    "status": "ready",
-    "size": 69246,
-    "raw": {
-        "uid": 1765175858636
-        ……
-    },
-    "uid": 1765175858636
-    ……
-}
-*/
+const uploadImageStore = useUploadImageStore()
 
-  /*
-// import type { UploadFile } from 'element-plus'
-export interface UploadFile {
-    name: string;
-    percentage?: number;
-    status: UploadStatus;
-    size?: number;
-    response?: unknown;
-    uid: number;
-    url?: string;
-    raw?: UploadRawFile;
-}
-export interface UploadRawFile extends File {
-    uid: number;
-    isDirectory?: boolean;
-}
-*/
+const imageUploadAdd = async (uploadFile: UploadFile) => {
+  uploadImageStore.addUpload(uploadFile)
 }
 </script>
 
