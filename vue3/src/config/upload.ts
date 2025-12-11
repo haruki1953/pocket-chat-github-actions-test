@@ -12,12 +12,12 @@ export const uploadImageMaxSimultaneousNumConfig = 2 as const
  * ```ts
  * // 推荐写法：使用配置对象中的常量
  * if (record.status === uploadImageStoreRecordStatusKeyConfig.pending) {
- *   // 处理待上传逻辑
+ *   // ...
  * }
  *
- * // 可行但不推荐：直接使用字符串
+ * // 可行但不推荐：直接使用字符串，虽然 TS 会提示类型，但不利于维护
  * if (record.status === 'pending') {
- *   // TS 会提示类型，但不利于维护
+ *   // ...
  * }
  * ```
  *
