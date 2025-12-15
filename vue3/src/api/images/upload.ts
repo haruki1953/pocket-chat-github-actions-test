@@ -77,12 +77,19 @@ export const pbImageUploadWithAxios = async (
   imageCreateData: {
     alt?: string
     keyword?: string
+
+    imageBig: File | undefined
+    imageBigWidth: number
+    imageBigHeight: number
     image: File
     imageWidth: number
     imageHeight: number
     imageSmall: File
     imageSmallWidth: number
     imageSmallHeight: number
+    imageTiny: File
+    imageTinyWidth: number
+    imageTinyHeight: number
   },
   options?: {
     onImageUploadProgress?: (progressEvent: AxiosProgressEvent) => void
@@ -104,7 +111,17 @@ export const pbImageUploadWithAxios = async (
     'imageSmall',
     File
   >
-  type DataTypeWithFile = DataTypeWithFile2
+  type DataTypeWithFile3 = ReplacePropertyType<
+    DataTypeWithFile2,
+    'imageBig',
+    File
+  >
+  type DataTypeWithFile4 = ReplacePropertyType<
+    DataTypeWithFile3,
+    'imageTiny',
+    File
+  >
+  type DataTypeWithFile = DataTypeWithFile4
 
   // 准备数据（类型安全）
   const data: DataTypeWithFile = {
@@ -112,12 +129,22 @@ export const pbImageUploadWithAxios = async (
     isDeleted: false,
     alt: imageCreateData.alt,
     keyword: imageCreateData.keyword,
+
     image: imageCreateData.image,
     imageWidth: imageCreateData.imageWidth,
     imageHeight: imageCreateData.imageHeight,
+
+    imageBig: imageCreateData.imageBig,
+    imageBigWidth: imageCreateData.imageBigWidth,
+    imageBigHeight: imageCreateData.imageBigHeight,
+
     imageSmall: imageCreateData.imageSmall,
     imageSmallWidth: imageCreateData.imageSmallWidth,
     imageSmallHeight: imageCreateData.imageSmallHeight,
+
+    imageTiny: imageCreateData.imageTiny,
+    imageTinyWidth: imageCreateData.imageTinyWidth,
+    imageTinyHeight: imageCreateData.imageTinyHeight,
   }
 
   // 将 data 转换为 FormData
