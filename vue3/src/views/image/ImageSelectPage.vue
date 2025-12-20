@@ -8,7 +8,7 @@ import {
   ImagePageTopBar,
   ImagePageUploadList,
 } from './components'
-import { useAuthStore, useI18nStore } from '@/stores'
+import { useAuthStore, useI18nStore, useUploadImageStore } from '@/stores'
 import { useImageQueryModeDesuwa } from './composables'
 
 const i18nStore = useI18nStore()
@@ -31,6 +31,8 @@ const {
   imageQueryPage,
   imageQueryPageSet,
 } = imageQueryModeDesuwa
+
+const uploadImageStore = useUploadImageStore()
 </script>
 
 <template>
@@ -74,7 +76,10 @@ const {
                   </div>
                   <!-- <div class="my-4 h-[1200px] bg-red-950"></div> -->
                   <!-- 上传列表 -->
-                  <div class="mt-4">
+                  <div
+                    v-if="uploadImageStore.uploadRecordList.length > 0"
+                    class="mt-4"
+                  >
                     <ImagePageUploadList></ImagePageUploadList>
                   </div>
                   <!-- 图片预览 -->

@@ -24,6 +24,7 @@ declare module 'vue' {
     RiArrowDownWideLine: typeof import('@remixicon/vue')['RiArrowDownWideLine']
     RiArrowLeftSFill: typeof import('@remixicon/vue')['RiArrowLeftSFill']
     RiArrowLeftWideFill: typeof import('@remixicon/vue')['RiArrowLeftWideFill']
+    RiArrowRightLine: typeof import('@remixicon/vue')['RiArrowRightLine']
     RiArrowRightWideFill: typeof import('@remixicon/vue')['RiArrowRightWideFill']
     RiArrowUpCircleLine: typeof import('@remixicon/vue')['RiArrowUpCircleLine']
     RiArrowUpWideLine: typeof import('@remixicon/vue')['RiArrowUpWideLine']

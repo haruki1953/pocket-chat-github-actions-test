@@ -33,7 +33,7 @@ export const pbImagePageListApi = async (
         return null
       }
       const search = data.search
-      return `( alt~'${search}' || keyword~'${search}' || author.username='${search}' || author.name='${search}' )`
+      return `( alt~'${search}' || keyword~'${search}' || id='${search}' || author.username='${search}' || author.name='${search}' )`
     })()
 
     // 合并为 filter
