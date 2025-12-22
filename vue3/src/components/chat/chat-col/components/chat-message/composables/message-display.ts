@@ -192,7 +192,9 @@ export const useMessageDisplay = (data: {
 
   const { currentMessageUserData: replyMessageUserData } =
     useCurrentMessageUserDataOptimization({
-      messageData: computed(() => currentMessageData.value.expand.replyMessage),
+      messageData: computed(
+        () => currentMessageData.value.expand?.replyMessage
+      ),
     })
 
   // 回复的消息的用户头像

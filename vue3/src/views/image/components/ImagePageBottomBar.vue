@@ -2,6 +2,10 @@
 import { pb } from '@/lib'
 import type { ImageSelectListDesuwaType } from './dependencies'
 import { pbImageDataChooseBySmallestWithUrl } from '@/utils'
+import { useSelectionImageStore } from '@/stores'
+import { useRouter } from 'vue-router'
+import { useRouterHistoryTool } from '@/composables'
+import { routerDict } from '@/config'
 
 const props = defineProps<{
   imageSelectListDesuwa: ImageSelectListDesuwaType
@@ -12,6 +16,27 @@ const {
   imageSelectList,
   imageSelectListClear,
 } = props.imageSelectListDesuwa
+
+const selectionImageStore = useSelectionImageStore()
+
+const { routerBackSafe } = useRouterHistoryTool()
+
+const canImageSelectSubmit = computed(() => {
+  if (imageSelectList.value.length <= 0) {
+    return false
+  }
+  return true
+})
+
+const imageSelectSubmit = () => {
+  if (!canImageSelectSubmit.value) {
+    return
+  }
+  selectionImageStore.set(imageSelectList.value)
+  routerBackSafe({
+    fallbackTo: routerDict.ChatHome.path,
+  })
+}
 </script>
 
 <template>
@@ -65,8 +90,8 @@ const {
             class=""
             circle
             type="primary"
-            :disabled="false"
-            @click="() => {}"
+            :disabled="!canImageSelectSubmit"
+            @click="imageSelectSubmit"
           >
             <template #icon>
               <RiCheckFill></RiCheckFill>

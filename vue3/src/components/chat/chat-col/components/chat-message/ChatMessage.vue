@@ -188,7 +188,7 @@ const {
                   >
                     <!-- 回复的消息 -->
                     <div
-                      v-if="currentMessageData.expand.replyMessage != null"
+                      v-if="currentMessageData.expand?.replyMessage != null"
                       class="mb-[4px] ml-[4px] mr-[12px]"
                     >
                       <div
@@ -202,7 +202,7 @@ const {
                         @click="
                           () => {
                             if (
-                              currentMessageData.expand.replyMessage != null &&
+                              currentMessageData.expand?.replyMessage != null &&
                               currentMessageData.expand.replyMessage.isDeleted
                             ) {
                               return

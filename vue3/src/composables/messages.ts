@@ -60,16 +60,16 @@ export const useCurrentMessageUserDataOptimization = (data: {
 
     // 非当前用户，返回原数据中的用户数据
     if (!isMessageCurrentUser.value) {
-      return messageData.value.expand.author
+      return messageData.value.expand?.author
     }
     // 为当前用户
     // profileQuery 为 null，可能为加载中，返回原数据
     if (profileQuery.data.value == null) {
-      return messageData.value.expand.author
+      return messageData.value.expand?.author
     }
 
     // messageData.value.expand.author为null是不正常的
-    if (messageData.value.expand.author == null) {
+    if (messageData.value.expand?.author == null) {
       console.error('messageData.value.expand.author == null')
       return undefined
     }

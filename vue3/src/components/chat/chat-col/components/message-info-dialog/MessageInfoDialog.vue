@@ -137,7 +137,7 @@ const authStore = useAuthStore()
                 <div
                   v-if="
                     chatRoomMessagesGetOneQuery.data.value.expand
-                      .replyMessage != null
+                      ?.replyMessage != null
                   "
                   class="mb-[6px] ml-[10px] mr-[12px]"
                 >
@@ -156,7 +156,7 @@ const authStore = useAuthStore()
                         if (
                           chatRoomMessagesGetOneQuery.data.value != null &&
                           chatRoomMessagesGetOneQuery.data.value.expand
-                            .replyMessage != null &&
+                            ?.replyMessage != null &&
                           chatRoomMessagesGetOneQuery.data.value.expand
                             .replyMessage.isDeleted
                         ) {

@@ -25,7 +25,6 @@ src\components\chat\chat-col\components\chat-input-bar\ChatInputBar.vue
 ```
 图片上传列表中的图标，悬停时在列表标题显示功能描述
 图片行列动态适配：无论图片总数如何，都可以以指定的列数显示 useBalancedGrid
-图片所缩略图改为 600x400f
 图片集合增加 关键词 keyword 字段，主要用于搜索
 ```
 
@@ -59,9 +58,26 @@ src\components\chat\chat-col\components\chat-input-bar\ChatInputBar.vue
 上传进度更新间隔
 ```
 
+图片系统
+```
+图片选择页
+图片选择至发送实现
+图片详情页
+图片选择页数据恢复实现
+图片预览
+聊天页图片便捷上传
+```
+
+图片选择页
+- [251216-图片分页查询](草稿251212/251216-图片分页查询.md)
+
+图片选择至发送实现
+- [251222-图片选择至发送实现](草稿251212/251222-图片选择至发送实现.md)
+
+
 TODO
 ```
-图片分页查询
+聊天页图片选择实现
 
 
 ```

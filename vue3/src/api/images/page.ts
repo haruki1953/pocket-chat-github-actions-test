@@ -1,9 +1,12 @@
 import { Collections, pb, type ImagesResponse, type UsersResponse } from '@/lib'
 import { fetchWithTimeoutPreferred } from '@/utils'
 
-export type ImagesResponseWithExpand = ImagesResponse<{
-  author?: UsersResponse
-}>
+export type ImagesResponseWithExpand = ImagesResponse<
+  | {
+      author?: UsersResponse
+    }
+  | undefined
+>
 
 /** 图片分页查询，普通分页 */
 export const pbImagePageListApi = async (

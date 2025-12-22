@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
 import type {
+  ImagesResponseWithExpand,
   MessagesResponseWidthExpand,
   MessagesResponseWidthExpandReplyMessage,
   PMLRCApiParameters0DataPageParamNonNullable,
@@ -32,6 +33,7 @@ export type PageRecoverDataForChatColItemType = {
     chatRoomMessagesLimitTopCursor: ChatRoomMessagesLimitCursorValType
     chatRoomMessagesLimitBottomCursor: ChatRoomMessagesLimitCursorValType
     chatInputContent: string
+    chatImageSelectList: ImagesResponseWithExpand[]
     chatReplyMessage: MessagesResponseWidthExpandReplyMessage | null
     chatEditMessage: MessagesResponseWidthExpand | null
     chatMessageIsRealtimeTimeout: boolean

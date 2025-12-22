@@ -36,7 +36,7 @@ export const useRealtimeMessagesSubscribe = () => {
     /** 标题-头像 */
     const title = (() => {
       // author == null是不正常的
-      if (newMessage.expand.author == null) {
+      if (newMessage.expand?.author == null) {
         console.error('newMessage.expand.author == null')
         return ''
       }
@@ -52,7 +52,7 @@ export const useRealtimeMessagesSubscribe = () => {
     /** 图标-头像 */
     const icon = (() => {
       // author == null是不正常的，返回默认头像
-      if (newMessage.expand.author == null) {
+      if (newMessage.expand?.author == null) {
         console.error('newMessage.expand.author == null')
         return appUserDefaultAvatar
       }

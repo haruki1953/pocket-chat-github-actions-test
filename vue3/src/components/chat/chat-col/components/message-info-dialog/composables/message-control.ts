@@ -155,7 +155,7 @@ export const useMessageControl = (data: {
       return
     }
     // 本消息无回复，直接返回
-    if (chatRoomMessagesGetOneQuery.data.value.expand.replyMessage == null) {
+    if (chatRoomMessagesGetOneQuery.data.value.expand?.replyMessage == null) {
       return
     }
     dialogClose()

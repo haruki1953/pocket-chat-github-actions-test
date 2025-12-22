@@ -15,6 +15,7 @@ import {
 } from './composables'
 import { RouterLink } from 'vue-router'
 import { useElementSize, useWindowSize } from '@vueuse/core'
+import { pbImageDataChooseBySmallestWithUrl } from '@/utils'
 
 const props = defineProps<{
   /** 房间id，空字符串为全局聊天 */
@@ -45,6 +46,7 @@ const i18nStore = useI18nStore()
 const chatInputBarData = useChatInputBarData({ props })
 const {
   chatInputContent,
+  chatImageSelectList,
   chatReplyMessage,
   chatReplyMessageSet,
   chatEditMessage,
@@ -91,6 +93,7 @@ const {
 
 defineExpose({
   chatInputContent,
+  chatImageSelectList,
   chatReplyMessage,
   chatReplyMessageSet,
   chatEditMessage,
@@ -223,81 +226,142 @@ const autosizeElInput = computed(() => {
               </Transition>
             </div>
           </template>
-          <!-- 输入框 -->
+          <!-- 输入框 或图片选择 -->
           <template v-else>
-            <!-- 回复的消息 -->
-            <div v-if="chatReplyMessage != null">
-              <div
-                class="flex items-center"
-                :class="{
-                  'cursor-pointer': !chatReplyMessage.isDeleted,
-                  'cursor-not-allowed': chatReplyMessage.isDeleted,
-                }"
-                @click="
-                  () => {
-                    if (
-                      chatReplyMessage != null &&
-                      chatReplyMessage.isDeleted
-                    ) {
-                      return
-                    }
-                    replyMessagesPositioningFn()
-                  }
-                "
-              >
-                <!-- 头像 -->
-                <div class="ml-[4px] mr-[6px]">
-                  <div
-                    class="h-[20px] w-[20px] rounded-full bg-color-background-soft"
-                    :style="{
-                      backgroundImage: `url('${chatReplyMessageUserAvatarUrl}')`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }"
-                  ></div>
-                </div>
-                <!-- 内容 -->
-                <div class="truncate">
-                  <div
-                    v-if="chatReplyMessage.isDeleted"
-                    class="select-none truncate text-[12px] text-color-text"
-                  >
-                    {{
-                      i18nStore.t('chatMessageReplyMessageDeletedShowText')()
-                    }}
-                  </div>
-                  <div
-                    v-else
-                    class="select-none truncate text-[12px] text-color-text"
-                  >
-                    {{ chatReplyMessage.content }}
-                  </div>
-                </div>
-                <!-- 取消按钮 -->
+            <div class="flex h-full flex-col items-stretch">
+              <!-- 回复的消息 -->
+              <div v-if="chatReplyMessage != null">
                 <div
-                  class="flow-root cursor-pointer"
-                  @click="chatReplyMessageCancel"
+                  class="flex items-center"
+                  :class="{
+                    'cursor-pointer': !chatReplyMessage.isDeleted,
+                    'cursor-not-allowed': chatReplyMessage.isDeleted,
+                    'mb-1': chatImageSelectList.length <= 0,
+                    'mb-2': chatImageSelectList.length > 0,
+                  }"
+                  @click="
+                    () => {
+                      if (
+                        chatReplyMessage != null &&
+                        chatReplyMessage.isDeleted
+                      ) {
+                        return
+                      }
+                      replyMessagesPositioningFn()
+                    }
+                  "
                 >
-                  <div class="ml-[6px] mr-[10px] text-color-text">
-                    <RiCloseCircleFill size="18px"></RiCloseCircleFill>
+                  <!-- 头像 -->
+                  <div class="ml-[4px] mr-[6px]">
+                    <div
+                      class="h-[20px] w-[20px] rounded-full bg-color-background-soft"
+                      :style="{
+                        backgroundImage: `url('${chatReplyMessageUserAvatarUrl}')`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }"
+                    ></div>
+                  </div>
+                  <!-- 内容 -->
+                  <div class="truncate">
+                    <div
+                      v-if="chatReplyMessage.isDeleted"
+                      class="select-none truncate text-[12px] text-color-text"
+                    >
+                      {{
+                        i18nStore.t('chatMessageReplyMessageDeletedShowText')()
+                      }}
+                    </div>
+                    <div
+                      v-else
+                      class="select-none truncate text-[12px] text-color-text"
+                    >
+                      {{ chatReplyMessage.content }}
+                    </div>
+                  </div>
+                  <!-- 取消按钮 -->
+                  <div
+                    class="flow-root cursor-pointer"
+                    @click="chatReplyMessageCancel"
+                  >
+                    <div class="ml-[6px] mr-[10px] text-color-text">
+                      <RiCloseCircleFill size="18px"></RiCloseCircleFill>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <!-- 聊天输入框 -->
-            <!-- :placeholder="
+              <!-- 聊天输入框 -->
+              <!-- :placeholder="
                   i18nStore.t('chatInputBarShiftEnterPlaceholderText')()
                 " -->
-            <div class="mt-[1px]">
-              <ElInput
-                v-model="chatInputContent"
-                size="large"
-                type="textarea"
-                resize="none"
-                :rows="1"
-                :autosize="autosizeElInput"
-                @keydown.alt.enter.exact.prevent="handleChatInputKeydownEnter"
-              />
+              <div class="flex flex-1 items-center">
+                <div class="flex-1">
+                  <!-- 图片选择 -->
+                  <div v-if="chatImageSelectList.length > 0" class="">
+                    <div class="flex items-center">
+                      <!-- 取消按钮 或 图片重新选择 -->
+                      <div>
+                        <!-- 在消息编辑时，应显示 图片重新选择 -->
+                        <ElButton
+                          v-if="chatInputBarFunctionChoose === 'edit'"
+                          circle
+                          type="info"
+                          :disabled="messageEditSubmitRunning"
+                          @click="$router.push(routerDict.ImageSelectPage.path)"
+                        >
+                          <template #icon>
+                            <RiImageLine></RiImageLine>
+                          </template>
+                        </ElButton>
+                        <!-- 取消按钮 -->
+                        <ElButton
+                          v-else
+                          circle
+                          type="info"
+                          :disabled="messageSendSubmitRunning"
+                          @click="chatImageSelectList = []"
+                        >
+                          <template #icon>
+                            <RiCloseFill></RiCloseFill>
+                          </template>
+                        </ElButton>
+                      </div>
+                      <!-- 图片 -->
+                      <div class="flex-1">
+                        <div class="ml-1 flex items-center justify-center">
+                          <div
+                            v-for="item in chatImageSelectList"
+                            :key="item.id"
+                          >
+                            <div class="mx-[4px] overflow-hidden rounded-[4px]">
+                              <div
+                                class="h-[30px] w-[30px] bg-cover bg-center"
+                                :style="{
+                                  backgroundImage: `url(${pbImageDataChooseBySmallestWithUrl(item).url})`,
+                                }"
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 聊天输入框 -->
+                  <div v-else class="mt-[1px]">
+                    <ElInput
+                      v-model="chatInputContent"
+                      size="large"
+                      type="textarea"
+                      resize="none"
+                      :rows="1"
+                      :autosize="autosizeElInput"
+                      @keydown.alt.enter.exact.prevent="
+                        handleChatInputKeydownEnter
+                      "
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </template>
         </div>
@@ -389,7 +453,9 @@ const autosizeElInput = computed(() => {
                   type="primary"
                   :loading="messageEditSubmitRunning"
                   :disabled="
-                    chatInputContent.trim() === '' && !messageEditSubmitRunning
+                    chatInputContent.trim() === '' &&
+                    chatImageSelectList.length <= 0 &&
+                    !messageEditSubmitRunning
                   "
                   @click="messageEditSubmit"
                 >
@@ -407,7 +473,9 @@ const autosizeElInput = computed(() => {
               type="primary"
               :loading="messageSendSubmitRunning"
               :disabled="
-                chatInputContent.trim() === '' && !messageSendSubmitRunning
+                chatInputContent.trim() === '' &&
+                chatImageSelectList.length <= 0 &&
+                !messageSendSubmitRunning
               "
               @click="messageSendSubmit"
             >

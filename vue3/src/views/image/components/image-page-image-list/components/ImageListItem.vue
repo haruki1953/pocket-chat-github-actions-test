@@ -44,7 +44,7 @@ const imageUrl = computed(() => {
 // 头像
 const imageAuthorAvatarUrl = computed(() => {
   // expand.author == null 这是异常（可能pb配置或前端api调用有误），但不抛错了，返回默认头像算了
-  if (props.imageData.expand.author == null) {
+  if (props.imageData.expand?.author == null) {
     console.error('expand.author  == null')
     return appUserDefaultAvatar
   }

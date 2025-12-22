@@ -301,7 +301,15 @@ const imageQueryDataMatrixWithSize = computed(() => {
                 </div>
               </template>
             </div>
-            <!-- 空状态 -->
+            <!-- 空白状态 由大小未加载引起 -->
+            <div
+              v-else-if="
+                imageQueryDataMatrixWithSize == null &&
+                imagePageListQuery.isFetching.value === false
+              "
+              class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center"
+            ></div>
+            <!-- 无内容状态 由无内容引起 -->
             <div
               v-else-if="
                 imageQueryDataMatrixWithSize != null &&
