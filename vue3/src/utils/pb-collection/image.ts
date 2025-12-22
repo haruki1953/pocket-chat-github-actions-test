@@ -91,7 +91,11 @@ export const pbImageDataChooseByLargest = (
   imageData: ImagesResponseWithExpand
 ) => {
   // Big
-  if (imageData.imageBig !== '') {
+  if (
+    imageData.imageBig !== '' &&
+    imageData.imageBigWidth > 0 &&
+    imageData.imageBigHeight > 0
+  ) {
     return {
       image: imageData.imageBig,
       width: imageData.imageBigWidth,
@@ -104,5 +108,59 @@ export const pbImageDataChooseByLargest = (
     image: imageData.image,
     width: imageData.imageWidth,
     height: imageData.imageHeight,
+  }
+}
+export const pbImageDataChooseByLargestWithUrl = (
+  imageData: ImagesResponseWithExpand
+) => {
+  const chooseData = pbImageDataChooseByLargest(imageData)
+  return {
+    url: pb.files.getURL(imageData, chooseData.image),
+    ...chooseData,
+  }
+}
+
+// 挑选最小的
+export const pbImageDataChooseBySmallest = (
+  imageData: ImagesResponseWithExpand
+) => {
+  if (
+    imageData.imageTiny !== '' &&
+    imageData.imageTinyWidth > 0 &&
+    imageData.imageTinyHeight > 0
+  ) {
+    return {
+      image: imageData.imageTiny,
+      width: imageData.imageTinyWidth,
+      height: imageData.imageTinyHeight,
+    }
+  }
+
+  if (
+    imageData.imageSmall !== '' &&
+    imageData.imageSmallWidth > 0 &&
+    imageData.imageSmallHeight > 0
+  ) {
+    return {
+      image: imageData.imageSmall,
+      width: imageData.imageSmallWidth,
+      height: imageData.imageSmallHeight,
+    }
+  }
+
+  // 兜底：返回 image
+  return {
+    image: imageData.image,
+    width: imageData.imageWidth,
+    height: imageData.imageHeight,
+  }
+}
+export const pbImageDataChooseBySmallestWithUrl = (
+  imageData: ImagesResponseWithExpand
+) => {
+  const chooseData = pbImageDataChooseBySmallest(imageData)
+  return {
+    url: pb.files.getURL(imageData, chooseData.image),
+    ...chooseData,
   }
 }

@@ -1,35 +1,12 @@
 <script setup lang="ts">
 import type { ImagesResponseWithExpand } from '@/api'
 import { ImageGroupItem } from './components'
+import { imageCalcSingleRatioUtil } from '@/utils'
+import { imageCalcSingleRatioOptionsConfig } from '@/config'
 
 const props = defineProps<{
   imageList: ImagesResponseWithExpand[]
 }>()
-
-// ImagesResponseWithExpand 如
-// {
-//   "alt": "",
-//   "author": "nim64qn4xb76a8s",
-//   "collectionId": "pbc_3607937828",
-//   "collectionName": "images",
-//   "created": "2025-12-20 03:08:08.454Z",
-//   "id": "cy02c4jchgdslen",
-//   "image": "image_wh17vuj3mv.webp",
-//   "imageHeight": 938,
-//   "imageWidth": 1063,
-//   "imageBig": "image_rfrf7itc8r.webp",
-//   "imageBigHeight": 1500,
-//   "imageBigWidth": 1700,
-//   "imageSmall": "image_05v1ey5dw8.webp",
-//   "imageSmallHeight": 563,
-//   "imageSmallWidth": 638,
-//   "imageTiny": "image_qlgt3vq6ed.webp",
-//   "imageTinyHeight": 375,
-//   "imageTinyWidth": 425,
-//   "isDeleted": false,
-//   "keyword": "",
-//   "updated": "2025-12-20 03:08:08.454Z"
-// }
 
 // 支持 1 到 4 个图片
 // 1个图片时，比例根据 imageWidth / imageHeight 计算，最大 2/1 最小 1/3，如果其中之一为0则默认为16/9
@@ -40,21 +17,15 @@ const props = defineProps<{
 
 /**
  * 单图比例计算
- * - 最大 2/1
- * - 最小 1/3
+ * - 最大 3/1 宽3 高1
+ * - 最小 1/2 宽1 高2
  * - 宽或高为 0 → 默认 16/9
  */
 function calcSingleRatio(img: {
   imageWidth: number
   imageHeight: number
 }): number {
-  const w = img.imageWidth
-  const h = img.imageHeight
-
-  if (w === 0 || h === 0) return 16 / 9
-
-  const raw = w / h
-  return Math.min(2 / 1, Math.max(1 / 3, raw))
+  return imageCalcSingleRatioUtil(img, imageCalcSingleRatioOptionsConfig)
 }
 
 /**

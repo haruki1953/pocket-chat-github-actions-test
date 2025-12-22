@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { pb } from '@/lib'
 import type { ImageSelectListDesuwaType } from './dependencies'
+import { pbImageDataChooseBySmallestWithUrl } from '@/utils'
 
 const props = defineProps<{
   imageSelectListDesuwa: ImageSelectListDesuwaType
@@ -41,7 +42,7 @@ const {
                   <div
                     class="h-[30px] w-[30px] bg-cover bg-center"
                     :style="{
-                      backgroundImage: `url(${pb.files.getURL(item, item.imageTiny)})`,
+                      backgroundImage: `url(${pbImageDataChooseBySmallestWithUrl(item).url})`,
                     }"
                   ></div>
                 </div>

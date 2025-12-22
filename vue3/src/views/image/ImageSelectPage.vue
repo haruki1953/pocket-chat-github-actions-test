@@ -14,6 +14,16 @@ import {
   useImageSelectListDesuwa,
 } from './composables'
 import type { ImagesResponseWithExpand } from '@/api'
+import {
+  imageCalcMaxWidthByRatioUtil,
+  pbImageDataChooseByLargest,
+} from '@/utils'
+import {
+  imageCalcMaxWidthByRatioSizeLimitHandlerConfig,
+  imageCalcMaxWidthByRatioStepsOnImagePageConfig,
+  imageCalcSingleRatioOptionsConfig,
+  imageGetDprFn,
+} from '@/config'
 
 const i18nStore = useI18nStore()
 
@@ -35,6 +45,31 @@ const {
 } = imageSelectListDesuwa
 
 const uploadImageStore = useUploadImageStore()
+
+const imageGroupMaxWidth = computed(() => {
+  // 单个图片
+  if (imageSelectList.value.length === 1) {
+    const { width: imageWidth, height: imageHeight } =
+      pbImageDataChooseByLargest(imageSelectList.value[0])
+
+    return imageCalcMaxWidthByRatioUtil({
+      imageWidth,
+      imageHeight,
+      imageCalcSingleRatioOptions: imageCalcSingleRatioOptionsConfig,
+      steps: imageCalcMaxWidthByRatioStepsOnImagePageConfig,
+      sizeLimitHandler: imageCalcMaxWidthByRatioSizeLimitHandlerConfig,
+    })
+  }
+  // 多个图片（或没有），以16比9计算，不加 sizeLimitHandler
+  else {
+    return imageCalcMaxWidthByRatioUtil({
+      imageWidth: 16,
+      imageHeight: 9,
+      imageCalcSingleRatioOptions: imageCalcSingleRatioOptionsConfig,
+      steps: imageCalcMaxWidthByRatioStepsOnImagePageConfig,
+    })
+  }
+})
 </script>
 
 <template>
@@ -84,7 +119,12 @@ const uploadImageStore = useUploadImageStore()
                       :key="imageSelectList.map((i) => i.id).toString()"
                       class="mt-4"
                     >
-                      <div>
+                      <div
+                        class="mx-auto"
+                        :style="{
+                          maxWidth: `${imageGroupMaxWidth}px`,
+                        }"
+                      >
                         <div
                           class="overflow-hidden rounded-[24px] border-[3px] border-transparent bg-color-background-soft"
                         >

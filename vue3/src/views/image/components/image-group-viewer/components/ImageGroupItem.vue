@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ImagesResponseWithExpand } from '@/api'
-import { layoutGetDprFn } from '@/config'
+import { imageGetDprFn } from '@/config'
 import { pbImageDataChooseByTargetSizeWithUrl } from '@/utils'
 import { useElementSize } from '@vueuse/core'
 
@@ -14,7 +14,7 @@ const refDiv = ref<HTMLElement | null>(null)
 const divSize = useElementSize(refDiv)
 
 // 获取 dpr ，几倍屏
-const dpr = layoutGetDprFn()
+const dpr = imageGetDprFn()
 
 const imageUrl = computed(() => {
   if (divSize.width.value === 0 || divSize.height.value === 0) {

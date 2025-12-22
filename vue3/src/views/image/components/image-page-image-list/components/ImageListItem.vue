@@ -3,7 +3,7 @@ import type { ImagesResponseWithExpand } from '@/api'
 import {
   appUserDefaultAvatar,
   fileUserAvatarConfig,
-  layoutGetDprFn,
+  imageGetDprFn,
 } from '@/config'
 import { pb } from '@/lib'
 import { pbImageDataChooseByTargetSizeWithUrl } from '@/utils'
@@ -32,7 +32,7 @@ const itemSwitch = () => {
 }
 
 // 获取 dpr ，几倍屏
-const dpr = layoutGetDprFn()
+const dpr = imageGetDprFn()
 
 const imageUrl = computed(() => {
   return pbImageDataChooseByTargetSizeWithUrl(props.imageData, {
