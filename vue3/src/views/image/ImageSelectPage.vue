@@ -28,6 +28,7 @@ import {
   imageCalcSingleRatioOptionsConfig,
   imageGetDprFn,
 } from '@/config'
+import { useWindowSize } from '@vueuse/core'
 
 const i18nStore = useI18nStore()
 
@@ -74,16 +75,24 @@ const imageGroupMaxWidth = computed(() => {
     })
   }
 })
+
+const windowSize = useWindowSize()
 </script>
 
 <template>
   <div>
     <!-- 大屏 双列 -->
-    <div class="">
+    <div v-if="windowSize.width.value >= 768" class="">
       <ContainerCol2
         col1Position="right"
         :col2StyleValue="{
-          width: '500px',
+          width: (() => {
+            // 大于1024时左栏宽度较大，小于则左栏宽度较小
+            if (windowSize.width.value >= 1024) {
+              return `500px`
+            }
+            return `400px`
+          })(),
         }"
         col1Twcss="flex-1 overflow-hidden"
       >
@@ -179,6 +188,61 @@ const imageGroupMaxWidth = computed(() => {
       </ContainerCol2>
     </div>
     <!-- 小屏 单列 -->
+    <div v-else>
+      <!-- 顶栏 底栏 操作面板 图片列表 -->
+      <div class="mx-[8px]">
+        <div
+          class="mx-auto"
+          :style="{
+            maxWidth: '500px',
+          }"
+        >
+          <ContainerBar :defaultBarHeight="60">
+            <template #default>
+              <div class="relative mb-4">
+                <div class="sticky top-0 z-[1] flow-root">
+                  <!-- 图片页顶栏 -->
+                  <ImagePageTopBar
+                    :pageTitle="i18nStore.t('pageImageSelect')()"
+                    :imageQueryModeDesuwa="imageQueryModeDesuwa"
+                  ></ImagePageTopBar>
+                </div>
+                <!-- 操作面板 -->
+                <div class="mt-4">
+                  <ImagePageControlPanel
+                    :imageQueryModeDesuwa="imageQueryModeDesuwa"
+                  ></ImagePageControlPanel>
+                </div>
+                <!-- 上传列表 -->
+                <Transition name="fade" mode="out-in">
+                  <div
+                    v-if="uploadImageStore.uploadRecordList.length > 0"
+                    class="mt-4"
+                  >
+                    <ImagePageUploadList></ImagePageUploadList>
+                  </div>
+                </Transition>
+                <!-- 图片列表 -->
+                <div class="mt-4">
+                  <ImagePageImageList
+                    :imageQueryModeDesuwa="imageQueryModeDesuwa"
+                    :imageSelectListDesuwa="imageSelectListDesuwa"
+                  ></ImagePageImageList>
+                </div>
+              </div>
+            </template>
+            <template #bar>
+              <div class="flow-root">
+                <!-- 图片页底栏 -->
+                <ImagePageBottomBar
+                  :imageSelectListDesuwa="imageSelectListDesuwa"
+                ></ImagePageBottomBar>
+              </div>
+            </template>
+          </ContainerBar>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

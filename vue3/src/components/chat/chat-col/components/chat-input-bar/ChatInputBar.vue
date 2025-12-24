@@ -429,7 +429,9 @@ const autosizeElInput = computed(() => {
                   type="primary"
                   :loading="messageEditSubmitRunning"
                   :disabled="
-                    chatInputContent.trim() === '' && !messageEditSubmitRunning
+                    chatInputContent.trim() === '' &&
+                    chatImageSelectList.length <= 0 &&
+                    !messageEditSubmitRunning
                   "
                   @click="messageEditSubmit"
                 >
