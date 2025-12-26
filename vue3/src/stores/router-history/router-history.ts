@@ -2,14 +2,10 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
-import type {
-  ImagesResponseWithBaseExpand,
-  MessagesResponseWidthExpand,
-  MessagesResponseWidthExpandReplyMessage,
-  PMLRCApiParameters0DataPageParamNonNullable,
-} from '@/api'
-import type { ChatRoomMessagesLimitCursorValType } from '@/components'
-import { useRecoverChatColModule } from './modules'
+import {
+  useRecoverChatColModule,
+  useRecoverImageSelectPageModule,
+} from './modules'
 
 type Route = ReturnType<typeof useRoute>
 
@@ -53,7 +49,8 @@ export const useRouterHistoryStore = defineStore(
       return stack.value[findIndex - 1]
     })
 
-    // 【页面恢复数据】各路由页面恢复数据，主要用于路由返回时，页面中的数据恢复（返回时保持之前浏览的位置和数据）
+    // 【页面恢复数据】START
+    // 各路由页面恢复数据，主要用于路由返回时，页面中的数据恢复（返回时保持之前浏览的位置和数据）
 
     // 【页面恢复数据 ChatCol 】用于 ChatCol 的页面恢复数据
     const recoverChatColModule = useRecoverChatColModule({
@@ -61,7 +58,13 @@ export const useRouterHistoryStore = defineStore(
     })
     const { pageRecoverDataForChatCol } = recoverChatColModule
 
-    //
+    // 【页面恢复数据 ImageSelectPage 】用于 ImageSelectPage 的页面恢复数据
+    const recoverImageSelectPageModule = useRecoverImageSelectPageModule({
+      currentUuid,
+    })
+    const { pageRecoverDataForImageSelectPage } = recoverImageSelectPageModule
+
+    // 【页面恢复数据】END
 
     const route = useRoute()
 
@@ -120,6 +123,15 @@ export const useRouterHistoryStore = defineStore(
             }
             return false
           })
+        // 【页面恢复数据清理 ImageSelectPage 】
+        pageRecoverDataForImageSelectPage.value =
+          pageRecoverDataForImageSelectPage.value.filter((i) => {
+            const find = stack.value.find((item) => item.uuid === i.uuid)
+            if (find != null) {
+              return true
+            }
+            return false
+          })
       }
 
       const routorHistoryUuid = history.state?.routorHistoryUuid
@@ -161,6 +173,7 @@ export const useRouterHistoryStore = defineStore(
       currentPreviousRouterHistoryEntry,
       routerAfterEachCheckHistoryStateAndControlRouterHistoryStack,
       ...recoverChatColModule,
+      ...recoverImageSelectPageModule,
     }
   }
 )

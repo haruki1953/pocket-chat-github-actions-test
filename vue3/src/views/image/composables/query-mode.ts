@@ -1,10 +1,20 @@
 import { queryKeys } from '@/queries'
 import { useAuthStore } from '@/stores'
 import { useQueryClient } from '@tanstack/vue-query'
+import type { ImageSelectPagePageRecoverDataDesuwaType } from './page-recover'
 
 export type ImageQueryModeMarkType = 'image_all' | 'image_my'
 
-export const useImageQueryModeDesuwa = () => {
+export const useImageQueryModeDesuwa = (data: {
+  imageSelectPagePageRecoverDataDesuwa: ImageSelectPagePageRecoverDataDesuwaType
+}) => {
+  const { imageSelectPagePageRecoverDataDesuwa } = data
+
+  const {
+    // 页面恢复数据
+    imageSelectPagePageRecoverData,
+  } = imageSelectPagePageRecoverDataDesuwa
+
   // 查询模式
   const imageQueryMode = ref<ImageQueryModeMarkType>('image_all')
 
@@ -13,6 +23,17 @@ export const useImageQueryModeDesuwa = () => {
 
   // 查询页数
   const imageQueryPage = ref(1)
+
+  // 查询模式
+  // 查询搜索
+  // 查询页数
+  // 【根据页面恢复数据初始化】
+  if (imageSelectPagePageRecoverData != null) {
+    imageQueryMode.value = imageSelectPagePageRecoverData.data.imageQueryMode
+    imageQuerySearch.value =
+      imageSelectPagePageRecoverData.data.imageQuerySearch
+    imageQueryPage.value = imageSelectPagePageRecoverData.data.imageQueryPage
+  }
 
   // 查询模式切换
 

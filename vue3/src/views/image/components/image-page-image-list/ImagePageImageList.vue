@@ -230,6 +230,13 @@ const imageQueryDataMatrixWithSize = computed(() => {
     }))
   })
 })
+
+defineExpose({
+  // 父组件将等待这些数据，等待有内容高度，有内容高度才能初始化滚动
+  refContentBox,
+  sizeContentBox,
+  contentBoxHeigh,
+})
 </script>
 
 <template>
@@ -246,7 +253,7 @@ const imageQueryDataMatrixWithSize = computed(() => {
       >
         <Transition name="fade500ms" mode="out-in">
           <div
-            v-if="refContentBox != null && sizeContentBox.width.value >= 0"
+            v-if="refContentBox != null && sizeContentBox.width.value > 0"
             class="h-full overflow-hidden rounded-t-[24px] border-[3px] border-transparent bg-color-background-soft"
           >
             <div class="relative h-full">
@@ -354,7 +361,7 @@ const imageQueryDataMatrixWithSize = computed(() => {
       </div>
     </div>
     <Transition name="fade500ms" mode="out-in">
-      <div v-if="refContentBox != null && sizeContentBox.width.value >= 0">
+      <div v-if="refContentBox != null && sizeContentBox.width.value > 0">
         <!-- 分割线 横向 -->
         <div class="border-t-[3px] border-transparent"></div>
         <!-- 分页栏 -->

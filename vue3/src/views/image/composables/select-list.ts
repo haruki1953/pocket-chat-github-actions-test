@@ -1,8 +1,23 @@
 import type { ImagesResponseWithBaseExpand } from '@/api'
+import type { ImageSelectPagePageRecoverDataDesuwaType } from './page-recover'
 
-export const useImageSelectListDesuwa = () => {
+export const useImageSelectListDesuwa = (data: {
+  imageSelectPagePageRecoverDataDesuwa: ImageSelectPagePageRecoverDataDesuwaType
+}) => {
+  const { imageSelectPagePageRecoverDataDesuwa } = data
+
+  const {
+    // 页面恢复数据
+    imageSelectPagePageRecoverData,
+  } = imageSelectPagePageRecoverDataDesuwa
+
   // 图片选择列表
   const imageSelectList = ref<ImagesResponseWithBaseExpand[]>([])
+  // 图片选择列表
+  // 【根据页面恢复数据初始化】
+  if (imageSelectPagePageRecoverData != null) {
+    imageSelectList.value = imageSelectPagePageRecoverData.data.imageSelectList
+  }
 
   /**
    * 添加图片（带最大数量限制 4）：

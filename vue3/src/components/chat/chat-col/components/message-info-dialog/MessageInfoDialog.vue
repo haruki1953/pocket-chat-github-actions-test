@@ -395,7 +395,7 @@ const goImageInfoPage = (data: {
             </div>
           </div>
           <!-- 垫片，视觉高度调整 -->
-          <div class="h-[16px]"></div>
+          <!-- <div class="h-[16px]"></div> -->
         </div>
       </template>
       <template v-else>

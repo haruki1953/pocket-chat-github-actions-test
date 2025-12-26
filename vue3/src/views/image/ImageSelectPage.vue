@@ -16,6 +16,9 @@ import { useAuthStore, useI18nStore, useUploadImageStore } from '@/stores'
 import {
   useImageQueryModeDesuwa,
   useImageSelectListDesuwa,
+  useImageSelectPagePageRecoverDataDesuwa,
+  useImageSelectPagePageRecoverDataSetOnLeave,
+  useImageSelectPagePageRecoverScrollTop,
 } from './composables'
 import type { ImagesResponseWithBaseExpand } from '@/api'
 import {
@@ -26,7 +29,6 @@ import {
   imageCalcMaxWidthByRatioSizeLimitHandlerConfig,
   imageCalcMaxWidthByRatioStepsOnImagePageConfig,
   imageCalcSingleRatioOptionsConfig,
-  imageGetDprFn,
 } from '@/config'
 import { useWindowSize } from '@vueuse/core'
 
@@ -36,18 +38,44 @@ useSeoMeta({
   title: computed(() => i18nStore.t('pageImageSelect')()),
 })
 
+// 页面恢复数据获取
+const imageSelectPagePageRecoverDataDesuwa =
+  useImageSelectPagePageRecoverDataDesuwa()
+
 // 封装 imageQueryMode 这一块（desuwa）
 // useImageQueryModeDesuwa
-const imageQueryModeDesuwa = useImageQueryModeDesuwa()
+const imageQueryModeDesuwa = useImageQueryModeDesuwa({
+  imageSelectPagePageRecoverDataDesuwa,
+})
 
 // 封装 imageSelectList 这一块desuwa
 // image-select-list
 // useImageSelectListDesuwa
-const imageSelectListDesuwa = useImageSelectListDesuwa()
+const imageSelectListDesuwa = useImageSelectListDesuwa({
+  imageSelectPagePageRecoverDataDesuwa,
+})
 const {
   //
   imageSelectList,
 } = imageSelectListDesuwa
+
+// src\views\image\components\image-page-image-list\ImagePageImageList.vue
+const refImagePageImageList = ref<InstanceType<
+  typeof ImagePageImageList
+> | null>(null)
+export type RefImagePageImageListType = typeof refImagePageImageList
+
+// 页面恢复 滚动恢复
+useImageSelectPagePageRecoverScrollTop({
+  imageSelectPagePageRecoverDataDesuwa,
+  refImagePageImageList,
+})
+
+// 页面恢复数据收集 在组件离开时执行
+useImageSelectPagePageRecoverDataSetOnLeave({
+  imageQueryModeDesuwa,
+  imageSelectListDesuwa,
+})
 
 const uploadImageStore = useUploadImageStore()
 
@@ -180,6 +208,7 @@ const windowSize = useWindowSize()
         <template #col1>
           <div class="my-4 ml-2 mr-6">
             <ImagePageImageList
+              ref="refImagePageImageList"
               :imageQueryModeDesuwa="imageQueryModeDesuwa"
               :imageSelectListDesuwa="imageSelectListDesuwa"
             ></ImagePageImageList>
@@ -225,6 +254,7 @@ const windowSize = useWindowSize()
                 <!-- 图片列表 -->
                 <div class="mt-4">
                   <ImagePageImageList
+                    ref="refImagePageImageList"
                     :imageQueryModeDesuwa="imageQueryModeDesuwa"
                     :imageSelectListDesuwa="imageSelectListDesuwa"
                   ></ImagePageImageList>

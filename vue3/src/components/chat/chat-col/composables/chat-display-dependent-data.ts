@@ -15,6 +15,7 @@ import type {
   RefChatColTemplateBaseType,
 } from './dependencies'
 import { useRouterHistoryStore } from '@/stores'
+import { useOnComponentLeave } from '@/composables'
 
 // 封装，定义 与 初始化，分开
 
@@ -349,9 +350,6 @@ export const useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave = (data: {
   } = data
 
   const routerHistoryStore = useRouterHistoryStore()
-  // onBeforeUnmount 有一些问题，有时会在 router.afterEach 之后才执行，这对于自己是不正确的，
-  // 而 onBeforeRouteLeave 虽然能确保在 router.afterEach 之前执行（确定吗），但不会触发于非路由卸载（如 v-if）
-  // 所以需要将 onBeforeUnmount 和 beforeRouteLeave结合，同时使用这两个，只要让这两个不会执行两次即可
 
   const chatColPageRecoverDataSet = () => {
     // console.log(
@@ -403,21 +401,7 @@ export const useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave = (data: {
     })
     // console.log(routerHistoryStore.pageRecoverDataForChatCol)
   }
-  // chatColPageRecoverDataSet 是否已执行
-  let chatColPageRecoverDataSetHasRun = false
-  // 让 chatColPageRecoverDataSet 只执行一次
-  const chatColPageRecoverDataSetRunOnce = () => {
-    if (chatColPageRecoverDataSetHasRun) {
-      return
-    }
-    chatColPageRecoverDataSetHasRun = true
-    chatColPageRecoverDataSet()
-  }
 
-  onBeforeUnmount(() => {
-    chatColPageRecoverDataSetRunOnce()
-  })
-  onBeforeRouteLeave(() => {
-    chatColPageRecoverDataSetRunOnce()
-  })
+  // 在组件离开时执行 页面恢复数据收集
+  useOnComponentLeave(chatColPageRecoverDataSet)
 }
