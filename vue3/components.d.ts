@@ -58,6 +58,7 @@ declare module 'vue' {
     RiMoonLine: typeof import('@remixicon/vue')['RiMoonLine']
     RiMore2Fill: typeof import('@remixicon/vue')['RiMore2Fill']
     RiMoreFill: typeof import('@remixicon/vue')['RiMoreFill']
+    RiMultiImageFill: typeof import('@remixicon/vue')['RiMultiImageFill']
     RiProgress1Line: typeof import('@remixicon/vue')['RiProgress1Line']
     RiProgress2Line: typeof import('@remixicon/vue')['RiProgress2Line']
     RiProgress3Line: typeof import('@remixicon/vue')['RiProgress3Line']

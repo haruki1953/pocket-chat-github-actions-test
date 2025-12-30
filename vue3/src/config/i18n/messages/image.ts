@@ -90,4 +90,22 @@ export const i18nMessagesImagePart = {
     'ko-KR': () => '새로고침' as const,
     'ru-RU': () => 'Обновить' as const,
   },
+  // 图片链接复制
+  imageInfoPageImageLinkCopyText: {
+    'en-US': () => 'Image link copied' as const,
+    'zh-CN': () => '图片链接已复制' as const,
+    'zh-TW': () => '圖片連結已複製' as const,
+    'ja-JP': () => '画像リンクをコピーしました' as const,
+    'ko-KR': () => '이미지 링크가 복사되었습니다' as const,
+    'ru-RU': () => 'Ссылка на изображение скопирована' as const,
+  },
+  imageInfoPageImageLinkCopyNotSupportedTitle: {
+    'en-US': () => 'Browser not supported, please copy manually' as const,
+    'zh-CN': () => '当前浏览器不支持，请手动复制' as const,
+    'zh-TW': () => '目前瀏覽器不支援，請手動複製' as const,
+    'ja-JP': () =>
+      'ブラウザが対応していません。手動でコピーしてください' as const,
+    'ko-KR': () => '브라우저가 지원되지 않습니다. 수동으로 복사하세요' as const,
+    'ru-RU': () => 'Браузер не поддерживается, скопируйте вручную' as const,
+  },
 } as const satisfies I18nMessagesSatisfiesType

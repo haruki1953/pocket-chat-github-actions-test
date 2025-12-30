@@ -6,3 +6,5 @@ export {
   ImageInfoPageTopBar,
   ImageInfoImageViewer,
 }
+
+export * from './image-info-control-panel'

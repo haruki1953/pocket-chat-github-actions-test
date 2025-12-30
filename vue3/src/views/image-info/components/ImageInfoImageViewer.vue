@@ -18,7 +18,6 @@ const props = defineProps<{
 const {
   //
   imagesGetOneQuery,
-  imageInfoQueryStatus,
 } = props.imageInfoQueryDesuwa
 
 const imageViewerMaxWidth = computed(() => {

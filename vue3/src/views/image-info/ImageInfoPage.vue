@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { useI18nStore } from '@/stores'
-import { ImageInfoImageViewer, ImageInfoPageTopBar } from './components'
+import {
+  ImageInfoControlPanel,
+  ImageInfoImageViewer,
+  ImageInfoPageTopBar,
+} from './components'
 import { useRoute } from 'vue-router'
 import { routerDict } from '@/config'
 import { useImageInfoQueryDesuwa } from './composables'
@@ -59,6 +63,11 @@ const {
               ></ImageInfoImageViewer>
             </div>
             <!-- 图片详情显示、操作面板 -->
+            <div class="mt-2">
+              <ImageInfoControlPanel
+                :imageInfoQueryDesuwa="imageInfoQueryDesuwa"
+              ></ImageInfoControlPanel>
+            </div>
             <!-- 使用此图片的消息 -->
           </div>
           <!-- 加载状态 -->
