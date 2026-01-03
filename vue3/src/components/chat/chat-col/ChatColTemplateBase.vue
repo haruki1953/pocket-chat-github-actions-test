@@ -10,10 +10,11 @@ import {
   ChatTopBar,
 } from './components'
 import { useI18nStore } from '@/stores'
-import { ContainerBar } from '@/components'
+import { ContainerBar, ContainerImageScreenViewer } from '@/components'
 import type {
   ChatDisplayDependentDataInitializationChooseType,
   ChatColPageRecoverDataCheckType,
+  ImageScreenViewerDesuwaType,
 } from './types'
 import { chatInputBarDefaultHeightConfig } from '@/config'
 
@@ -57,7 +58,16 @@ const props = defineProps<{
   /** 聊天标题 */
   chatTitle: string
   chatMessageQueryisNullAndError: boolean
+  // 图片查看器这一块
+  imageScreenViewerDesuwa: ImageScreenViewerDesuwaType
 }>()
+
+const {
+  imageScreenViewerClose,
+  imageScreenViewerVisible,
+  imageScreenViewerImageList,
+  imageScreenViewerImageCurrentId,
+} = props.imageScreenViewerDesuwa
 
 // 消息详情对话框
 const refMessageInfoDialog = ref<InstanceType<typeof MessageInfoDialog> | null>(
@@ -97,6 +107,13 @@ const chatRoomMessagesForShowWithOnMounted = computed(() => {
 
 <template>
   <div class="relative">
+    <!-- 图片查看器 -->
+    <ContainerImageScreenViewer
+      :imageList="imageScreenViewerImageList"
+      :imageCurrentId="imageScreenViewerImageCurrentId"
+      :dialogVisible="imageScreenViewerVisible"
+      :dialogCloseFn="imageScreenViewerClose"
+    ></ContainerImageScreenViewer>
     <!-- 消息详情对话框 -->
     <MessageInfoDialog
       ref="refMessageInfoDialog"
@@ -202,6 +219,7 @@ const chatRoomMessagesForShowWithOnMounted = computed(() => {
                   :replyPositioningFlagMessageId="replyPositioningFlagMessageId"
                   :replyPositioningFlagShow="replyPositioningFlagShow"
                   :replyPositioningFlagClose="replyPositioningFlagClose"
+                  :imageScreenViewerDesuwa="imageScreenViewerDesuwa"
                 ></ChatMessage>
               </div>
               <!-- <ElButton @click="testPbPageBottom">pb分页测试</ElButton> -->

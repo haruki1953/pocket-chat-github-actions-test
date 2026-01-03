@@ -2,7 +2,10 @@ import { useRouterHistoryStore } from '@/stores'
 import type { ImageQueryModeDesuwaType } from './query-mode'
 import type { ImageSelectListDesuwaType } from './select-list'
 import { injectAppMainElScrollbar, useOnComponentLeave } from '@/composables'
-import type { RefImagePageImageListType } from './dependencies'
+import type {
+  ImageScreenViewerDesuwaType,
+  RefImagePageImageListType,
+} from './dependencies'
 import { watchUntilSourceCondition } from '@/utils'
 import { useWindowSize } from '@vueuse/core'
 
@@ -96,12 +99,14 @@ export const useImageSelectPagePageRecoverDataSetOnLeave = (data: {
   imageQueryModeDesuwa: ImageQueryModeDesuwaType
   imageSelectListDesuwa: ImageSelectListDesuwaType
   refImagePageImageList: RefImagePageImageListType
+  imageScreenViewerDesuwa: ImageScreenViewerDesuwaType
 }) => {
   const {
     //
     imageQueryModeDesuwa,
     imageSelectListDesuwa,
     refImagePageImageList,
+    imageScreenViewerDesuwa,
   } = data
 
   const {
@@ -115,6 +120,12 @@ export const useImageSelectPagePageRecoverDataSetOnLeave = (data: {
     //
     imageSelectList,
   } = imageSelectListDesuwa
+
+  const {
+    //
+    imageScreenViewerImageList,
+    imageScreenViewerImageCurrentId,
+  } = imageScreenViewerDesuwa
 
   const windowSize = useWindowSize()
 
@@ -131,6 +142,8 @@ export const useImageSelectPagePageRecoverDataSetOnLeave = (data: {
       appMainElScrollbarScrollTop: appMainElScrollbar.value?.wrapRef?.scrollTop,
       windowWidth: windowSize.width.value,
       contentBoxWidth: refImagePageImageList.value?.sizeContentBox.width.value,
+      imageScreenViewerImageList: imageScreenViewerImageList.value,
+      imageScreenViewerImageCurrentId: imageScreenViewerImageCurrentId.value,
     })
   }
 

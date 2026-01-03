@@ -4,6 +4,8 @@ export const imagePageListApiPerPageNumConfig = 30 as const
 /** 使用某图片的消息查询，分页查询，每页个数 */
 export const imageInfoMessageListApiPerPageNumConfig = 10 as const
 
+export const imageScreenViewerDialogQueryKey = 'ImageScreenViewer' as const
+
 // 获取 dpr ，几倍屏，设备像素比
 export const imageGetDprFn = () => {
   // 当前是几倍屏：

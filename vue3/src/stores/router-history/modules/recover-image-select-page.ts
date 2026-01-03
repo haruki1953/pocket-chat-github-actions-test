@@ -11,6 +11,8 @@ export type PageRecoverDataForImageSelectPageItemType = {
     appMainElScrollbarScrollTop: number | undefined
     windowWidth: number | undefined
     contentBoxWidth: number | undefined
+    imageScreenViewerImageList: ImagesResponseWithBaseExpand[]
+    imageScreenViewerImageCurrentId: string
   }
 }
 

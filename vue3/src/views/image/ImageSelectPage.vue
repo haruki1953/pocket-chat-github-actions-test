@@ -2,6 +2,7 @@
 import {
   ContainerBar,
   ContainerCol2,
+  ContainerImageScreenViewer,
   IGVSoltAltLable,
   ImageGroupViewerWithQueryAndRealtime,
 } from '@/components'
@@ -15,6 +16,7 @@ import {
 import { useAuthStore, useI18nStore, useUploadImageStore } from '@/stores'
 import {
   useImageQueryModeDesuwa,
+  useImageScreenViewerDesuwa,
   useImageSelectListDesuwa,
   useImageSelectPagePageRecoverDataDesuwa,
   useImageSelectPagePageRecoverDataSetOnLeave,
@@ -71,11 +73,25 @@ useImageSelectPagePageRecoverScrollTop({
   refImagePageImageList,
 })
 
+// 图片查看器这一块
+const imageScreenViewerDesuwa = useImageScreenViewerDesuwa({
+  //
+  imageSelectPagePageRecoverDataDesuwa,
+})
+const {
+  imageScreenViewerOpen,
+  imageScreenViewerClose,
+  imageScreenViewerVisible,
+  imageScreenViewerImageList,
+  imageScreenViewerImageCurrentId,
+} = imageScreenViewerDesuwa
+
 // 页面恢复数据收集 在组件离开时执行
 useImageSelectPagePageRecoverDataSetOnLeave({
   imageQueryModeDesuwa,
   imageSelectListDesuwa,
   refImagePageImageList,
+  imageScreenViewerDesuwa,
 })
 
 const uploadImageStore = useUploadImageStore()
@@ -110,6 +126,13 @@ const windowSize = useWindowSize()
 
 <template>
   <div>
+    <!-- 图片查看器 -->
+    <ContainerImageScreenViewer
+      :imageList="imageScreenViewerImageList"
+      :imageCurrentId="imageScreenViewerImageCurrentId"
+      :dialogVisible="imageScreenViewerVisible"
+      :dialogCloseFn="imageScreenViewerClose"
+    ></ContainerImageScreenViewer>
     <!-- 大屏 双列 -->
     <div v-if="windowSize.width.value >= 768" class="">
       <ContainerCol2
@@ -171,16 +194,17 @@ const windowSize = useWindowSize()
                           class="overflow-hidden rounded-[20px] border-[3px] border-transparent bg-color-background-soft"
                         >
                           <ImageGroupViewerWithQueryAndRealtime
-                            v-slot="{ imageItem }"
+                            v-slot="{ imageItem, imageList }"
                             :imageList="imageSelectList"
                             bgTwcss="bg-color-background-mute"
                           >
                             <div
                               class="h-full cursor-pointer"
                               @click="
-                                () => {
-                                  console.log('imageItem', imageItem)
-                                }
+                                imageScreenViewerOpen({
+                                  imageList: imageList,
+                                  imageCurrentId: imageItem.id,
+                                })
                               "
                             >
                               <IGVSoltAltLable

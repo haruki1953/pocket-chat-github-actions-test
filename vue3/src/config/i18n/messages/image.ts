@@ -12,6 +12,16 @@ export const i18nMessagesImagePart = {
     'ko-KR': () => '이미지 업로드' as const,
     'ru-RU': () => 'Загрузить изображение' as const,
   },
+  // 登录后才能上传图片的提示
+  imagePageImageLoginText: {
+    'en-US': () => 'Log in to upload images' as const,
+    'zh-CN': () => '登录后即可上传图片' as const,
+    'zh-TW': () => '登入後即可上傳圖片' as const,
+    'ja-JP': () => 'ログインして画像をアップロード' as const,
+    'ko-KR': () => '로그인 후 이미지를 업로드할 수 있습니다' as const,
+    'ru-RU': () => 'Войдите, чтобы загрузить изображения' as const,
+  },
+
   imagePageAllImageText: {
     'en-US': () => 'All Images' as const,
     'zh-CN': () => '全部图片' as const,

@@ -68,7 +68,10 @@ const imageListWithQueryAndRealtime = computed<ImagesResponseWithBaseExpand[]>(
     :bgTwcss="bgTwcss"
     :lazy="lazy"
   >
-    <slot :imageItem="imageItem"></slot>
+    <slot
+      :imageItem="imageItem"
+      :imageList="imageListWithQueryAndRealtime"
+    ></slot>
   </ImageGroupViewer>
 </template>
 

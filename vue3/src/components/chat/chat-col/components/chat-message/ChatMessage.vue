@@ -10,6 +10,7 @@ import type {
   ChatRoomMessagesItem,
   OpenMessageInfoDialogType,
   ChatInputBar,
+  ImageScreenViewerDesuwaType,
 } from './dependencies'
 import type {
   MessagesResponseWidthExpandImages,
@@ -57,8 +58,15 @@ const props = defineProps<{
   replyPositioningFlagMessageId: string | null
   replyPositioningFlagShow: boolean
   replyPositioningFlagClose: () => void
+  // 图片查看器这一块
+  imageScreenViewerDesuwa: ImageScreenViewerDesuwaType
 }>()
 export type ChatMessagePropsType = typeof props
+
+const {
+  //
+  imageScreenViewerOpen,
+} = props.imageScreenViewerDesuwa
 
 const i18nStore = useI18nStore()
 
@@ -379,7 +387,7 @@ const messageShowModeWithData = computed<MessageShowModeWithDataValueType>(
                         }"
                       >
                         <ImageGroupViewerWithQueryAndRealtime
-                          v-slot="{ imageItem }"
+                          v-slot="{ imageItem, imageList }"
                           :imageList="messageShowModeWithData.data.images"
                           bgTwcss="bg-color-background-mute"
                           lazy
@@ -387,9 +395,10 @@ const messageShowModeWithData = computed<MessageShowModeWithDataValueType>(
                           <div
                             class="h-full cursor-pointer"
                             @click="
-                              () => {
-                                console.log('imageItem', imageItem)
-                              }
+                              imageScreenViewerOpen({
+                                imageList: imageList,
+                                imageCurrentId: imageItem.id,
+                              })
                             "
                           >
                             <IGVSoltAltLable

@@ -6,13 +6,18 @@ import {
   ImageInfoPageTopBar,
   ImageInfoMessagesList,
 } from './components'
-import { useRoute } from 'vue-router'
-import { routerDict } from '@/config'
-import { useImageInfoQueryDesuwa } from './composables'
+import { useRoute, useRouter } from 'vue-router'
+import { imageScreenViewerDialogQueryKey, routerDict } from '@/config'
+import {
+  useImageInfoQueryDesuwa,
+  useImageScreenViewerDesuwa,
+} from './composables'
 import {
   useWatchSourceToHoldTime,
   useWatchSourceToHoldTimeAndStep,
 } from '@/utils'
+import { ContainerImageScreenViewer } from '@/components'
+import { useRouteControlDialog } from '@/composables'
 
 export type ImageInfoRouteParamsType = typeof imageInfoRouteParams
 
@@ -44,6 +49,7 @@ const {
   imageInfoQueryStatus,
   imagesGetOneQuery,
   imageInfoMessageListQuery,
+  imageInfoDataWithRealtime,
 } = imageInfoQueryDesuwa
 
 const isFetching = computed(() => {
@@ -57,10 +63,35 @@ const { sourceHaveHold: isFetchingForAni } = useWatchSourceToHoldTime({
   source: isFetching,
   holdMs: 500,
 })
+
+const imageScreenViewerDesuwa = useImageScreenViewerDesuwa()
+const {
+  imageScreenViewerOpen,
+  imageScreenViewerClose,
+  imageScreenViewerVisible,
+} = imageScreenViewerDesuwa
+
+const router = useRouter()
+
+// 清除路由中的查询参数，避免页面初始化时图片查看器就打开
+const newQuery = { ...route.query }
+delete newQuery[imageScreenViewerDialogQueryKey]
+router.replace({
+  path: route.path,
+  query: newQuery,
+})
 </script>
 
 <template>
   <div>
+    <!-- 图片查看器 -->
+    <ContainerImageScreenViewer
+      v-if="imageInfoDataWithRealtime != null"
+      :imageList="[imageInfoDataWithRealtime]"
+      :imageCurrentId="imageInfoDataWithRealtime.id"
+      :dialogVisible="imageScreenViewerVisible"
+      :dialogCloseFn="imageScreenViewerClose"
+    ></ContainerImageScreenViewer>
     <!-- 边距控制 -->
     <div class="mx-[8px]">
       <div
@@ -84,6 +115,7 @@ const { sourceHaveHold: isFetchingForAni } = useWatchSourceToHoldTime({
             <div class="mt-4">
               <ImageInfoImageViewer
                 :imageInfoQueryDesuwa="imageInfoQueryDesuwa"
+                :imageScreenViewerDesuwa="imageScreenViewerDesuwa"
               ></ImageInfoImageViewer>
             </div>
             <!-- 图片详情显示、操作面板 -->
@@ -93,18 +125,20 @@ const { sourceHaveHold: isFetchingForAni } = useWatchSourceToHoldTime({
               ></ImageInfoControlPanel>
             </div>
             <!-- 使用此图片的消息 -->
-            <div
-              v-if="
-                imageInfoMessageListQuery.data.value != null &&
-                imageInfoMessageListQuery.data.value.totalItems > 0
-              "
-              class="mt-4"
-            >
-              <!-- ImageInfoMessagesList -->
-              <ImageInfoMessagesList
-                :imageInfoQueryDesuwa="imageInfoQueryDesuwa"
-              ></ImageInfoMessagesList>
-            </div>
+            <Transition name="fade" mode="out-in">
+              <div
+                v-if="
+                  imageInfoMessageListQuery.data.value != null &&
+                  imageInfoMessageListQuery.data.value.totalItems > 0
+                "
+                class="mt-4"
+              >
+                <!-- ImageInfoMessagesList -->
+                <ImageInfoMessagesList
+                  :imageInfoQueryDesuwa="imageInfoQueryDesuwa"
+                ></ImageInfoMessagesList>
+              </div>
+            </Transition>
             <!-- 刷新时的占位指示，同时充当底部高度垫片 -->
             <div class="my-4">
               <div class="flex h-[40px] items-center justify-center">

@@ -3,7 +3,10 @@ import {
   imageCalcMaxWidthByRatioUtil,
   pbImageDataChooseByLargest,
 } from '@/utils'
-import type { ImageInfoQueryDesuwaType } from './dependencies'
+import type {
+  ImageInfoQueryDesuwaType,
+  ImageScreenViewerDesuwaType,
+} from './dependencies'
 import {
   imageCalcMaxWidthByRatioSizeLimitHandlerConfig,
   imageCalcMaxWidthByRatioStepsOnImagePageConfig,
@@ -13,6 +16,7 @@ import { IGVSoltAltLable, ImageGroupViewer } from '@/components'
 
 const props = defineProps<{
   imageInfoQueryDesuwa: ImageInfoQueryDesuwaType
+  imageScreenViewerDesuwa: ImageScreenViewerDesuwaType
 }>()
 
 const {
@@ -20,6 +24,11 @@ const {
   imagesGetOneQuery,
   imageInfoDataWithRealtime,
 } = props.imageInfoQueryDesuwa
+
+const {
+  //
+  imageScreenViewerOpen,
+} = props.imageScreenViewerDesuwa
 
 const imageViewerMaxWidth = computed(() => {
   if (imageInfoDataWithRealtime.value == null) {
@@ -61,6 +70,7 @@ const imageViewerMaxWidth = computed(() => {
               class="h-full cursor-pointer"
               @click="
                 () => {
+                  imageScreenViewerOpen()
                   console.log('imageItem', imageItem)
                 }
               "

@@ -5,12 +5,14 @@ import type {
 import {
   chatRoomMessagesInfoDialogQueryKey,
   chatRoomMessagesTwowayPositioningCursorRouterQueryParametersKeyConfig,
+  imageScreenViewerDialogQueryKey,
 } from '@/config'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import type {
   ChatRoomMessagesInfiniteTwowayQueryType,
   ChatRoomMessagesLimitTopCursorType,
   ChatRoomMessagesListAndRealtimeType,
+  ImageScreenViewerDesuwaType,
   PropsType,
   RefChatColTemplateBaseType,
 } from './dependencies'
@@ -140,9 +142,11 @@ export const useChatDisplayDependentDataInitializationChoose = () => {
   const newQuery = { ...route.query }
   delete newQuery[keyId]
   delete newQuery[keyCreated]
-  // 对于 MessageInfoDialog 如果是 chatColPageRecoverData 则保留，否则也清除
+  // 对于 MessageInfoDialog 和 ImageScreenViewer
+  // 如果是 chatColPageRecoverData 则保留，否则也清除
   if (chooseInitialization !== 'chatColPageRecoverData') {
     delete newQuery[chatRoomMessagesInfoDialogQueryKey]
+    delete newQuery[imageScreenViewerDialogQueryKey]
   }
   router.replace({
     path: route.path,
@@ -334,6 +338,7 @@ export const useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave = (data: {
   chatRoomMessagesLimitBottomCursor: ChatRoomMessagesLimitTopCursorType
   refChatColTemplateBase: RefChatColTemplateBaseType
   chatRoomMessagesRealtimeReadNumber: Ref<number>
+  imageScreenViewerDesuwa: ImageScreenViewerDesuwaType
 }) => {
   const {
     //
@@ -347,7 +352,14 @@ export const useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave = (data: {
     chatRoomMessagesLimitBottomCursor,
     refChatColTemplateBase,
     chatRoomMessagesRealtimeReadNumber,
+    imageScreenViewerDesuwa,
   } = data
+
+  const {
+    //
+    imageScreenViewerImageList,
+    imageScreenViewerImageCurrentId,
+  } = imageScreenViewerDesuwa
 
   const routerHistoryStore = useRouterHistoryStore()
 
@@ -398,6 +410,8 @@ export const useChatColPageRecoverDataSetOnBeforeUnmountAndRouteLeave = (data: {
       refScrollWarpScrollTop,
       chatRoomMessagesRealtimeReadNumber:
         chatRoomMessagesRealtimeReadNumber.value,
+      imageScreenViewerImageList: imageScreenViewerImageList.value,
+      imageScreenViewerImageCurrentId: imageScreenViewerImageCurrentId.value,
     })
     // console.log(routerHistoryStore.pageRecoverDataForChatCol)
   }

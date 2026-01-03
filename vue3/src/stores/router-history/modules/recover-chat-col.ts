@@ -27,6 +27,8 @@ export type PageRecoverDataForChatColItemType = {
     dialogMessageId: string | null
     refScrollWarpScrollTop: number
     chatRoomMessagesRealtimeReadNumber: number
+    imageScreenViewerImageList: ImagesResponseWithBaseExpand[]
+    imageScreenViewerImageCurrentId: string
   }
 }
 
