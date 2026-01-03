@@ -45,7 +45,7 @@ export const imagesPageFilterBuildFn = (data: {
 
   // --- author 部分 ---
   const filterAuthorPart = (() => {
-    if (data.author === null || data.author === undefined) {
+    if (data.author == null) {
       return null
     }
     if (data.author === '') {
@@ -56,7 +56,7 @@ export const imagesPageFilterBuildFn = (data: {
 
   // --- search 部分 ---
   const filterSearchPart = (() => {
-    if (data.search === null || data.search === undefined) {
+    if (data.search == null) {
       return null
     }
     if (data.search === '') {
@@ -76,21 +76,21 @@ export const imagesPageFilterBuildFn = (data: {
   const filterIsDeletePart = `${recordKeys.isDeleted}=false` as const
 
   // --- 显式 if 分支 ---
-  if (filterAuthorPart !== null && filterSearchPart !== null) {
+  if (filterAuthorPart != null && filterSearchPart != null) {
     return `(
     ${filterAuthorPart} &&
     ${filterSearchPart} &&
     ${filterIsDeletePart}
     )` as const
   }
-  if (filterAuthorPart !== null && filterSearchPart === null) {
+  if (filterAuthorPart != null && filterSearchPart == null) {
     // return filterAuthorPart
     return `(
     ${filterAuthorPart} &&
     ${filterIsDeletePart}
     )` as const
   }
-  if (filterAuthorPart === null && filterSearchPart !== null) {
+  if (filterAuthorPart == null && filterSearchPart != null) {
     // return filterSearchPart
     return `(
     ${filterSearchPart} &&

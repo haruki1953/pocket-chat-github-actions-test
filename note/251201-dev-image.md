@@ -76,6 +76,21 @@ src\components\chat\chat-col\components\chat-input-bar\ChatInputBar.vue
 
 TODO
 ```
-注意要改改消息通知为图片时的情况
+发现问题，图片选择页，当切换至我的图片，并刷新时，会造成 全部图片和我的图片数量显示一样
+看了看请求，发的两个请求居然一摸一样
+src\views\image\components\image-page-control-panel\ImagePageControlPanel.vue
+
+src\views\image\components\image-page-image-list\ImagePageImageList.vue
+  searchContent: computed(() => {
+    // 【260103】
+    // if (imageQuerySearch.value === '') {
+    //   return null
+    // }
+    return imageQuerySearch.value
+  }),
+
+很奇怪，有点像querykey的问题，这样之后居然又没问题了
+
+可能是 ImagePageImageList 中的querykey的切换，导致其缓存设置错乱？
 ```
 
