@@ -22,6 +22,7 @@ export const useChatInputBarDispaly = (
     //
     props,
     chatInputContent,
+    chatImageSelectList,
     chatReplyMessage,
     chatEditMessage,
     chatMessageIsRealtimeTimeout,
@@ -91,7 +92,12 @@ export const useChatInputBarDispaly = (
       return 'edit'
     }
     // send 输入文字后，或正处于发送中，为 输入栏+发送按钮
-    if (chatInputContent.value !== '' || messageSendSubmitRunning.value) {
+    // 【251222】图片选择后，也为send
+    if (
+      chatImageSelectList.value.length > 0 ||
+      chatInputContent.value !== '' ||
+      messageSendSubmitRunning.value
+    ) {
       return 'send' as const
     }
     // backTop 底部仍有未显示的消息，或距底部距离大于大于一定值后为 回到底部文字+按钮

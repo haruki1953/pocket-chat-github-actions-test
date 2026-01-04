@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useElementOverlayClick } from '@/composables'
 import { useDark, useElementSize, useWindowSize } from '@vueuse/core'
 import type { ElScrollbar } from 'element-plus'
 
@@ -59,6 +60,12 @@ const dialogOverlayOnClickFn = () => {
     props.dialogCloseFn()
   }
 }
+
+const { onOverlayDown, onOverlayUp, stopOverlayJudge } = useElementOverlayClick(
+  {
+    callback: dialogOverlayOnClickFn,
+  }
+)
 </script>
 
 <template>
@@ -76,7 +83,8 @@ const dialogOverlayOnClickFn = () => {
             'bg-color-background-a90': isDark && overlayTranslucent,
             'overlay-blur': overlayBlur,
           }"
-          @click="dialogOverlayOnClickFn"
+          @mousedown="onOverlayDown"
+          @mouseup="onOverlayUp"
         >
           <ElScrollbar height="100vh">
             <!-- 内容左右距屏幕最小16px -->
@@ -103,12 +111,21 @@ const dialogOverlayOnClickFn = () => {
                   <!-- 内容上下距屏幕最小32px -->
                   <div class="my-[32px]">
                     <!-- 阻断这之中的点击向父级传递，内容中的点击不会传递到遮罩，以达到只有遮罩被点击时才关闭 -->
-                    <div @click.stop>
-                      <!-- 此div用于测量内容高度 -->
-                      <div ref="refContentDiv" class="dialog-content">
-                        <!-- 内容插槽 -->
-                        <slot></slot>
-                      </div>
+                    <div
+                      @mousedown.stop="stopOverlayJudge"
+                      @mouseup.stop="stopOverlayJudge"
+                    >
+                      <Transition name="dialog-content-fade">
+                        <!-- 此div用于测量内容高度 -->
+                        <div
+                          v-show="dialogVisible"
+                          ref="refContentDiv"
+                          class="dialog-content"
+                        >
+                          <!-- 内容插槽 -->
+                          <slot></slot>
+                        </div>
+                      </Transition>
                     </div>
                   </div>
                 </div>
@@ -127,22 +144,39 @@ const dialogOverlayOnClickFn = () => {
     backdrop-filter: blur(15px); /* 模糊背景内容 */
     -webkit-backdrop-filter: blur(15px); /* Safari 支持 */
   }
-  transition: all 0.3s;
-}
-.dialog-content {
-  transition: all 0.3s;
-  transition-delay: 0.2s;
 }
 
-// .poto-container-dialog-leave-active,
-// .poto-container-dialog-enter-active {
-//   // transition: all 0.3s;
-// }
-.poto-container-dialog-enter-from,
+/* 遮罩进入：无 delay，立刻开始淡入 */
+.poto-container-dialog-enter-from {
+  opacity: 0;
+}
+.poto-container-dialog-enter-active {
+  transition: opacity 0.3s;
+}
+
+/* 遮罩离开：延迟 再开始淡出 */
 .poto-container-dialog-leave-to {
   opacity: 0;
-  .dialog-content {
-    opacity: 0;
-  }
+}
+.poto-container-dialog-leave-active {
+  transition: opacity 0.3s;
+  // transition-delay: 0.3s; /* ⭐ 关闭时遮罩比内容晚 */
+}
+
+/* 内容进入：延迟 再开始淡入 */
+.dialog-content-fade-enter-from {
+  opacity: 0;
+}
+.dialog-content-fade-enter-active {
+  transition: opacity 0.3s;
+  // transition-delay: 0.3s; /* ⭐ 打开时比遮罩晚 */
+}
+
+/* 内容离开：无 delay，立刻开始淡出 */
+.dialog-content-fade-leave-to {
+  opacity: 0;
+}
+.dialog-content-fade-leave-active {
+  transition: opacity 0.3s;
 }
 </style>

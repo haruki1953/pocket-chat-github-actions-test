@@ -3,6 +3,28 @@ import { ChatTopBarMoreMenuItem } from '@/components'
 import { useRouterHistoryTool } from '@/composables'
 import { routerDict } from '@/config'
 import { onClickOutside } from '@vueuse/core'
+import type { ImageQueryModeDesuwaType } from './dependencies'
+import { useWatchSourceToHoldTimeAndStep } from '@/utils'
+import { useI18nStore } from '@/stores'
+
+const props = defineProps<{
+  pageTitle: string
+  imageQueryModeDesuwa: ImageQueryModeDesuwaType
+}>()
+
+const {
+  //
+  isImageQueryRefreshRunning,
+  imageQueryRefresh,
+} = props.imageQueryModeDesuwa
+
+// 让加载动画至少显示1秒（转一圈），且转的圈数为整数
+const { sourceHaveHold: isImageQueryRefreshRunningForAni } =
+  useWatchSourceToHoldTimeAndStep({
+    source: computed(() => isImageQueryRefreshRunning.value),
+    holdMs: 1000,
+    stepMs: 1000,
+  })
 
 const isShowMoreMenu = ref(false)
 const openMoreMenu = () => {
@@ -43,6 +65,8 @@ const chatTopBarBack = () => {
     fallbackTo: routerDict.ChatHome.path,
   })
 }
+
+const i18nStore = useI18nStore()
 </script>
 
 <template>
@@ -60,19 +84,21 @@ const chatTopBarBack = () => {
         <slot name="chatTopBarMoreMenu"></slot>
         <!-- 菜单项 刷新 -->
         <ChatTopBarMoreMenuItem
-          :isRunning="false"
+          :isRunning="isImageQueryRefreshRunningForAni"
           :isRunnable="true"
-          @click="() => {}"
+          @click="imageQueryRefresh()"
         >
           <template #icon>
             <RiRestartLine
               size="18px"
               :class="{
-                'loading-spinner-1s': false,
+                'loading-spinner-1s': isImageQueryRefreshRunningForAni,
               }"
             ></RiRestartLine>
           </template>
-          <template #text> 刷新 </template>
+          <template #text>
+            {{ i18nStore.t('imagePageImageQueryRefreshText')() }}
+          </template>
         </ChatTopBarMoreMenuItem>
         <!-- 收起 -->
         <div
@@ -85,6 +111,10 @@ const chatTopBarBack = () => {
         </div>
       </div>
     </Transition>
+    <!-- bar-box 补丁，为解决firefox中盒子边缘与外阴影的缝隙问题 -->
+    <div
+      class="pointer-events-none absolute bottom-[-0.5px] left-[-0.5px] right-[-0.5px] top-[-0.5px] z-[4] rounded-b-[24px] border-2 border-color-background-soft"
+    ></div>
     <div class="top-bar-box relative z-[3] flow-root bg-color-background-soft">
       <div class="flex items-center">
         <!-- 返回 -->
@@ -97,7 +127,7 @@ const chatTopBarBack = () => {
         <!-- 标题 -->
         <div class="flex-1 truncate">
           <div class="truncate text-[15px] font-bold text-color-text">
-            图片选择
+            {{ pageTitle }}
           </div>
         </div>
         <!-- 更多 -->

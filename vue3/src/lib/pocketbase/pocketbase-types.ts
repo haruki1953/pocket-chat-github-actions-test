@@ -107,10 +107,23 @@ export type ImagesRecord = {
 	created?: IsoDateString
 	id: string
 	image: string
+	imageBig?: string
+	imageBigFileSize?: number
+	imageBigHeight?: number
+	imageBigWidth?: number
+	imageFileSize?: number
 	imageHeight?: number
 	imageSmall?: string
+	imageSmallFileSize?: number
+	imageSmallHeight?: number
+	imageSmallWidth?: number
+	imageTiny?: string
+	imageTinyFileSize?: number
+	imageTinyHeight?: number
+	imageTinyWidth?: number
 	imageWidth?: number
 	isDeleted?: boolean
+	keyword?: string
 	updated?: IsoDateString
 }
 

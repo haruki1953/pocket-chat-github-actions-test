@@ -74,7 +74,23 @@ export const pbImageUploadApi = (uploadFile: UploadFile) => {
  * ```
  */
 export const pbImageUploadWithAxios = async (
-  uploadFile: UploadFile,
+  imageCreateData: {
+    alt?: string
+    keyword?: string
+
+    imageBig: File | undefined
+    imageBigWidth: number
+    imageBigHeight: number
+    image: File
+    imageWidth: number
+    imageHeight: number
+    imageSmall: File
+    imageSmallWidth: number
+    imageSmallHeight: number
+    imageTiny: File
+    imageTinyWidth: number
+    imageTinyHeight: number
+  },
   options?: {
     onImageUploadProgress?: (progressEvent: AxiosProgressEvent) => void
     controller?: AbortController
@@ -86,21 +102,53 @@ export const pbImageUploadWithAxios = async (
   if (!pb.authStore.isValid || pb.authStore.record?.id == null) {
     throw new Error('!pb.authStore.isValid || pb.authStore.record?.id == null')
   }
-  if (uploadFile.raw == null) {
-    throw new Error('uploadFile.raw == null')
-  }
 
   // 准备类型
   type DataType = Create<Collections.Images>
-  type DataTypeWithFile = ReplacePropertyType<DataType, 'image', File>
+  type DataTypeWithFile1 = ReplacePropertyType<DataType, 'image', File>
+  type DataTypeWithFile2 = ReplacePropertyType<
+    DataTypeWithFile1,
+    'imageSmall',
+    File
+  >
+  type DataTypeWithFile3 = ReplacePropertyType<
+    DataTypeWithFile2,
+    'imageBig',
+    File
+  >
+  type DataTypeWithFile4 = ReplacePropertyType<
+    DataTypeWithFile3,
+    'imageTiny',
+    File
+  >
+  type DataTypeWithFile = DataTypeWithFile4
 
   // 准备数据（类型安全）
   const data: DataTypeWithFile = {
     author: pb.authStore.record.id,
-    image: uploadFile.raw,
-    imageWidth: 10,
-    imageHeight: 10,
     isDeleted: false,
+    alt: imageCreateData.alt,
+    keyword: imageCreateData.keyword,
+
+    image: imageCreateData.image,
+    imageWidth: imageCreateData.imageWidth,
+    imageHeight: imageCreateData.imageHeight,
+    imageFileSize: imageCreateData.image.size,
+
+    imageBig: imageCreateData.imageBig,
+    imageBigWidth: imageCreateData.imageBigWidth,
+    imageBigHeight: imageCreateData.imageBigHeight,
+    imageBigFileSize: imageCreateData.imageBig?.size ?? 0,
+
+    imageSmall: imageCreateData.imageSmall,
+    imageSmallWidth: imageCreateData.imageSmallWidth,
+    imageSmallHeight: imageCreateData.imageSmallHeight,
+    imageSmallFileSize: imageCreateData.imageSmall.size,
+
+    imageTiny: imageCreateData.imageTiny,
+    imageTinyWidth: imageCreateData.imageTinyWidth,
+    imageTinyHeight: imageCreateData.imageTinyHeight,
+    imageTinyFileSize: imageCreateData.imageTiny.size,
   }
 
   // 将 data 转换为 FormData
@@ -123,9 +171,10 @@ export const pbImageUploadWithAxios = async (
 
   // Axios 请求
   const res = await axios.post(
-    `${axiosConfig.baseUrl}api/collections/${Collections.Images}/records`,
+    `/api/collections/${Collections.Images}/records`,
     formData,
     {
+      baseURL: axiosConfig.baseUrl,
       headers: {
         Authorization: pb.authStore.token,
         'Content-Type': 'multipart/form-data',
