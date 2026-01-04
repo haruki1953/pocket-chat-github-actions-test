@@ -97,7 +97,7 @@ export const useImageInfoQueryDesuwa = (data: {
 
     try {
       // 页面重置
-      imageInfoMessageListPageNum.value = 1
+      // imageInfoMessageListPageNum.value = 1
 
       await Promise.all([
         queryClient.invalidateQueries({

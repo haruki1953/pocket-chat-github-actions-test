@@ -11,12 +11,15 @@ export const useImagePageListQuery = (data: {
   authorId: ComputedRef<string | null>
   /** 搜索内容 */
   searchContent: ComputedRef<string | null>
+  /** customStrId */
+  customStrId?: ComputedRef<string | null>
 }) => {
   const {
     //
     pageNum,
     authorId,
     searchContent,
+    customStrId,
   } = data
 
   const query = useQuery({
@@ -25,9 +28,10 @@ export const useImagePageListQuery = (data: {
     // 查询键（响应式）
     queryKey: computed(() =>
       queryKeys.imagePageList(
-        pageNum.value,
         authorId.value,
-        searchContent.value
+        searchContent.value,
+        pageNum.value,
+        customStrId?.value
       )
     ),
     queryFn: async () => {
@@ -36,14 +40,6 @@ export const useImagePageListQuery = (data: {
         throw new Error('pageNum.value == null')
       }
 
-      console.log(
-        'useImagePageListQuery',
-        queryKeys.imagePageList(
-          pageNum.value,
-          authorId.value,
-          searchContent.value
-        )
-      )
       // pb请求
       const pbRes = await pbImagePageListApi(pageNum.value, {
         author: authorId.value,

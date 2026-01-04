@@ -30,64 +30,6 @@ const { imageSelectPagePageRecoverData } =
 
 const authStore = useAuthStore()
 
-const imagePageListQueryTest = useImagePageListQuery({
-  pageNum: computed(() => 1),
-  authorId: computed(() => null),
-  searchContent: computed(() => ''),
-})
-
-;(async () => {
-  while (true) {
-    await new Promise((r) => setTimeout(r, 2000))
-    console.log('imagePageListQueryTest', imagePageListQueryTest.data.value)
-  }
-})()
-
-// refetch 是安全可靠的
-;(async () => {
-  while (true) {
-    await new Promise((r) => setTimeout(r, 20000))
-    console.log('imagePageListQueryTest.refetch()')
-    imagePageListQueryTest.refetch()
-  }
-})()
-
-// 发现问题了
-// queryClient.invalidateQueries 后
-// imagePageListQueryTest 会变得 和 imagePageListQuery 一样
-
-// 我觉得是因为 imagePageListQuery 其key变了很多次，比如 searchContent
-// 在 queryClient.invalidateQueries 后 会为其经历的所有key都设置缓存，
-// 而且是错误的缓存，本应只为当前计算数据对应的key设置缓存，但其为其经历的所有key都设置了缓存
-// 从而导致了 imagePageListQueryTest 的值和 imagePageListQuery 一样
-// 或许 ‘为其经历的所有key都设置了缓存’ 只是其现象，根本原因或许是因为，
-// 或许 imagePageListQuery 其缓存写入始终指的是同一个地方？才导致其经历的所有key都为这个值？
-
-// 这是很大的问题，说明 usequery不能用变化的key，或者说现在的 queryClient.invalidateQueries 有问题
-// 我感觉就是 queryClient.invalidateQueries 有问题
-// 我的usequery使用方法没问题，我这样实现靠改变 imageQuerySearch.value 就能实现查询指定关键词
-// tanstack query 就该这么用，就该这么来管理异步状态，就该可以用变化的queryKey
-
-// 我觉得我现在遇到的问题是因为
-// "@tanstack/vue-query": "^5.81.5",
-// 此版本的 queryClient.invalidateQueries 有问题
-// 我打算不要它，因为其太魔法感觉确实可能会有问题
-// 我打算改手动调用目标usequery的refetch来实现刷新更稳定
-// 对于 queryClient 这种东西我尽量不使用，只用用setquerydata这种比较可控的算了
-
-// 先更新 @tanstack/vue-query 试试
-// pnpm add @tanstack/vue-query@5.92.1
-// 没用还是有问题
-
-// 再明确的说明一下问题
-// 初始时，imagePageListQueryTest 和 imagePageListQuery 的数据相同，这是没问题的
-// 然后 searchContent 更改，会让 imagePageListQuery 触发新的查询，其值改变
-// 此时 imagePageListQueryTest 和 imagePageListQuery 的数据是不同的
-// 当此时 queryClient.invalidateQueries(/* ... */) 后，就会出现问题
-// imagePageListQueryTest 的数据变得和 imagePageListQuery 一样，即根据searchContent查询的数据
-// 明明 imagePageListQueryTest 的 searchContent: computed(() => '') 是不变的
-// imagePageListQueryTest 的数据却变得和 imagePageListQuery 一样
-
 const imagePageListQuery = useImagePageListQuery({
   pageNum: computed(() => {
     // 未登录且image_my，则应为null，不查询
@@ -112,11 +54,12 @@ const imagePageListQuery = useImagePageListQuery({
   }),
   searchContent: computed(() => {
     // 【260103】
-    // if (imageQuerySearch.value === '') {
-    //   return null
-    // }
+    if (imageQuerySearch.value === '') {
+      return null
+    }
     return imageQuerySearch.value
   }),
+  customStrId: computed(() => 'imagePageListQuery'),
 })
 
 // 内容的数据，图片的个数

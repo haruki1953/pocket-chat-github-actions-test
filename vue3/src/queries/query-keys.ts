@@ -25,15 +25,18 @@ export const queryKeys = {
 
   /** useImagePageListQuery */
   imagePageList: (
-    pageNum?: number | null,
     authorId?: string | null,
-    searchContent?: string | null
+    searchContent?: string | null,
+    pageNum?: number | null,
+    /** 可自定义的充当唯一标识的字符串 */
+    customStrId?: string | null
   ) => {
     return [
       'imagePageList',
-      ...definedOrEmpty(pageNum),
       ...definedOrEmpty(authorId),
       ...definedOrEmpty(searchContent),
+      ...definedOrEmpty(pageNum),
+      ...definedOrEmpty(customStrId),
     ] as const
     // return ['imagePageList', pageNum, authorId, searchContent] as const
   },
@@ -83,6 +86,10 @@ export const queryKeys = {
  *
  * 这样做的核心目的，是为了在使用 `queryClient.invalidateQueries` 时，
  * 能够通过较短的前缀 Key 进行模糊匹配，从而一次性失效同一类请求。
+ *
+ * 【260104】注意，使用 queryClient.invalidateQueries 时需注意，其有问题
+ * note\笔记251120\260104-关于 TanStack Vue Query 动态 queryKey 与 invalidateQueries 异常行为数据或缓存污染的分析笔记.md
+ * 现在确认了，只要在invalidateQueries时，没有多个useQuery的key相同且都是active，就不会有问题
  *
  * 若参数为 `undefined`，则该维度会被完全省略，不会占据数组位置；
  * 若参数为 `null` 或其他有效值，则会被保留。
