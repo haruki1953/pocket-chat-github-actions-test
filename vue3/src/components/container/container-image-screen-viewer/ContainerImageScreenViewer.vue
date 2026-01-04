@@ -48,6 +48,7 @@ const {
   //
   viewerContentData,
   viewerImageData,
+  viewerKeyUuid,
 } = viewerControlDesuwa
 </script>
 
@@ -67,7 +68,10 @@ const {
           @mousedown="onOverlayDown"
           @mouseup="onOverlayUp"
         >
-          <div :key="imageCurrentId" class="relative h-full w-full">
+          <div
+            :key="imageCurrentId + viewerKeyUuid"
+            class="relative h-full w-full"
+          >
             <!-- 内容 居中 -->
             <Transition name="dialog-content-fade">
               <div

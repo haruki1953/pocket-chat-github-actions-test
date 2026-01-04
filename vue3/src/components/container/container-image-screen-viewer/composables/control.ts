@@ -5,6 +5,7 @@ import {
   pbImageDataChooseByLargest,
   pbImageDataChooseByLargestWithUrl,
 } from '@/utils'
+import { v4 as uuidv4 } from 'uuid'
 
 export const useViewerControlDesuwa = (data: {
   //
@@ -28,15 +29,7 @@ export const useViewerControlDesuwa = (data: {
     isAltOpen.value = false
   }
 
-  watch(
-    () => props.dialogVisible,
-    (val) => {
-      if (val === true) {
-        // 每次打开时reset
-        controlReset()
-      }
-    }
-  )
+  const viewerKeyUuid = ref('')
 
   const viewerImageList = computed(() => props.imageList)
 
@@ -47,6 +40,19 @@ export const useViewerControlDesuwa = (data: {
       (i) => i.id === viewerImageCurrentId.value
     )
   })
+
+  watch(
+    () => props.dialogVisible,
+    (val) => {
+      if (val === true) {
+        // 每次打开时reset
+        controlReset()
+        viewerImageCurrentId.value = props.imageCurrentId
+        viewerKeyUuid.value = uuidv4()
+      }
+    },
+    { immediate: true }
+  )
 
   watch(
     () => props.imageCurrentId,
@@ -171,6 +177,7 @@ export const useViewerControlDesuwa = (data: {
     viewerImageSwitch,
     viewerClose,
     viewerContentData,
+    viewerKeyUuid,
   }
 }
 
