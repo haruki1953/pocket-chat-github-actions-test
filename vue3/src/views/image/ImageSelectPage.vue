@@ -31,8 +31,10 @@ import {
   imageCalcMaxWidthByRatioSizeLimitHandlerConfig,
   imageCalcMaxWidthByRatioStepsOnImagePageConfig,
   imageCalcSingleRatioOptionsConfig,
+  imageScreenViewerDialogQueryKey,
 } from '@/config'
 import { useWindowSize } from '@vueuse/core'
+import { useRoute, useRouter } from 'vue-router'
 
 const i18nStore = useI18nStore()
 
@@ -43,6 +45,10 @@ useSeoMeta({
 // 页面恢复数据获取
 const imageSelectPagePageRecoverDataDesuwa =
   useImageSelectPagePageRecoverDataDesuwa()
+const {
+  //
+  imageSelectPagePageRecoverData,
+} = imageSelectPagePageRecoverDataDesuwa
 
 // 封装 imageQueryMode 这一块（desuwa）
 // useImageQueryModeDesuwa
@@ -122,6 +128,20 @@ const imageGroupMaxWidth = computed(() => {
 })
 
 const windowSize = useWindowSize()
+
+const route = useRoute()
+const router = useRouter()
+
+// 如果有恢复数据，则不需要
+if (imageSelectPagePageRecoverData == null) {
+  // 清除路由中的查询参数，避免页面初始化时图片查看器就打开
+  const newQuery = { ...route.query }
+  delete newQuery[imageScreenViewerDialogQueryKey]
+  router.replace({
+    path: route.path,
+    query: newQuery,
+  })
+}
 </script>
 
 <template>
