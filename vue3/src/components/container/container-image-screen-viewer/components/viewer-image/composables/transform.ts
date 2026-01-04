@@ -34,18 +34,15 @@ export const useViewerImageTransformDesuwa = (data: {
   const boundaries = computed(boundariesFn)
 
   // ---------------------------
-  // 位移限制
+  // 负责位移
   // ---------------------------
-  const clampTranslate = () => {
+  const clampTranslate = (newX: number, newY: number) => {
     const { windowWidth, windowHeight, contentWidth, contentHeight } =
       allSize.value
 
     const w = contentWidth * scale.value
     const h = contentHeight * scale.value
 
-    // 图片中心点 = 屏幕中心 + translate
-    // 图片左边 = centerX - w/2
-    // => translateX = left - (windowWidth - w)/2
     const halfW = w / 2
     const halfH = h / 2
 
@@ -54,63 +51,61 @@ export const useViewerImageTransformDesuwa = (data: {
     const minTop = 100
     const minBottom = 100
 
-    // 屏幕中心
     const screenCenterX = windowWidth / 2
     const screenCenterY = windowHeight / 2
 
-    // 当前图片中心
-    const imgCenterX = screenCenterX + translateX.value
-    const imgCenterY = screenCenterY + translateY.value
+    // 用传入的新位移计算图片中心
+    const imgCenterX = screenCenterX + newX
+    const imgCenterY = screenCenterY + newY
 
-    // 当前边界
     const left = imgCenterX - halfW
     const right = windowWidth - (imgCenterX + halfW)
     const top = imgCenterY - halfH
     const bottom = windowHeight - (imgCenterY + halfH)
 
+    let finalX = newX
+    let finalY = newY
+
+    // 容差
+    const toleranceX = 10
+    const toleranceY = 14
+
     // ---------------------------
     // X 方向
     // ---------------------------
-
-    let newTranslateX = translateX.value
-
-    const leftTooBig = left >= minLeft
-    const rightTooBig = right >= minRight
+    const leftTooBig = left >= minLeft + toleranceX
+    const rightTooBig = right >= minRight + toleranceX
 
     if (leftTooBig && rightTooBig) {
-      // 图片太小，两边都满足 → 居中
-      newTranslateX = 0
+      finalX = 0
     } else if (leftTooBig) {
-      // 左边超过 → 把左边拉回到 minLeft
       const targetCenterX = minLeft + halfW
-      newTranslateX = targetCenterX - screenCenterX
+      finalX = targetCenterX - screenCenterX
     } else if (rightTooBig) {
-      // 右边超过 → 把右边拉回到 minRight
       const targetCenterX = windowWidth - minRight - halfW
-      newTranslateX = targetCenterX - screenCenterX
+      finalX = targetCenterX - screenCenterX
     }
 
     // ---------------------------
     // Y 方向
     // ---------------------------
-
-    let newTranslateY = translateY.value
-
-    const topTooBig = top >= minTop
-    const bottomTooBig = bottom >= minBottom
+    const topTooBig = top >= minTop + toleranceY
+    const bottomTooBig = bottom >= minBottom + toleranceY
 
     if (topTooBig && bottomTooBig) {
-      newTranslateY = 0
+      finalY = 0
     } else if (topTooBig) {
       const targetCenterY = minTop + halfH
-      newTranslateY = targetCenterY - screenCenterY
+      finalY = targetCenterY - screenCenterY
     } else if (bottomTooBig) {
       const targetCenterY = windowHeight - minBottom - halfH
-      newTranslateY = targetCenterY - screenCenterY
+      finalY = targetCenterY - screenCenterY
     }
 
-    translateX.value = newTranslateX
-    translateY.value = newTranslateY
+    // 直接设置位移
+    translateX.value = finalX
+    translateY.value = finalY
+    // return { x: finalX, y: finalY }
   }
 
   // ---------------------------
@@ -147,11 +142,15 @@ export const useViewerImageTransformDesuwa = (data: {
     const ratio = newScale / oldScale
 
     // 位移补偿：模拟以鼠标为中心缩放
-    translateX.value -= offsetX * (ratio - 1)
-    translateY.value -= offsetY * (ratio - 1)
+    const newX = translateX.value - offsetX * (ratio - 1)
+    const newY = translateY.value - offsetY * (ratio - 1)
 
     scale.value = newScale
-    clampTranslate()
+
+    clampTranslate(newX, newY)
+    // const clamped = clampTranslate(newX, newY)
+    // translateX.value = clamped.x
+    // translateY.value = clamped.y
   }
 
   // ---------------------------
@@ -186,9 +185,13 @@ export const useViewerImageTransformDesuwa = (data: {
     lastX = e.clientX
     lastY = e.clientY
 
-    translateX.value += dx
-    translateY.value += dy
-    clampTranslate()
+    const newX = translateX.value + dx
+    const newY = translateY.value + dy
+
+    clampTranslate(newX, newY)
+    // const clamped = clampTranslate(newX, newY)
+    // translateX.value = clamped.x
+    // translateY.value = clamped.y
   }
 
   const onMouseUp = () => {
@@ -234,11 +237,13 @@ export const useViewerImageTransformDesuwa = (data: {
     const newScale = touchStartScale * ratio
     applyScale(newScale, center.x, center.y)
 
-    // 位移
-    translateX.value = touchStartTranslate.x + (center.x - touchStartCenter.x)
-    translateY.value = touchStartTranslate.y + (center.y - touchStartCenter.y)
+    const newX = touchStartTranslate.x + (center.x - touchStartCenter.x)
+    const newY = touchStartTranslate.y + (center.y - touchStartCenter.y)
 
-    clampTranslate()
+    clampTranslate(newX, newY)
+    // const clamped = clampTranslate(newX, newY)
+    // translateX.value = clamped.x
+    // translateY.value = clamped.y
   }
 
   // ---------------------------
