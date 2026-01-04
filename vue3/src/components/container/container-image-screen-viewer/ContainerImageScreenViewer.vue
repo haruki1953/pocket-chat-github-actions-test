@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ImagesResponseWithBaseExpand } from '@/api'
 import { useDark } from '@vueuse/core'
-import { ViewerBottomBar, ViewerTopBar } from './components'
+import { ViewerBottomBar, ViewerImage, ViewerTopBar } from './components'
 import { useViewerControlDesuwa } from './composables'
 import { useElementOverlayClick } from '@/composables'
 
@@ -50,6 +50,14 @@ const {
   viewerImageData,
   viewerKeyUuid,
 } = viewerControlDesuwa
+
+const refViewerImage = ref<InstanceType<typeof ViewerImage> | null>(null)
+const isImageLoading = computed(() => {
+  if (refViewerImage.value == null) {
+    return false
+  }
+  return refViewerImage.value.isImageLoading
+})
 </script>
 
 <template>
@@ -93,13 +101,15 @@ const {
                       }"
                     >
                       <div
-                        class="h-full w-full bg-cover bg-center"
-                        :style="{
-                          backgroundImage: `url(${viewerContentData.url})`,
-                        }"
+                        class="h-full w-full"
                         @mousedown.stop="stopOverlayJudge"
                         @mouseup.stop="stopOverlayJudge"
-                      ></div>
+                      >
+                        <ViewerImage
+                          ref="refViewerImage"
+                          :imageSrc="viewerContentData.url"
+                        ></ViewerImage>
+                      </div>
                     </div>
                   </Transition>
                 </div>
@@ -124,7 +134,6 @@ const {
                 </div>
               </div>
             </Transition>
-
             <!-- 底栏 -->
             <div class="absolute bottom-0 left-0 right-0">
               <div class="mx-[8px]">
@@ -139,6 +148,22 @@ const {
                 </div>
               </div>
             </div>
+            <!-- 加载状态 -->
+            <Transition name="fade">
+              <div
+                v-show="isImageLoading"
+                class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center"
+              >
+                <div
+                  class="h-[50px] w-[50px] overflow-hidden text-color-text-soft"
+                >
+                  <RiLoader3Line
+                    class="loading-spinner-800ms"
+                    size="50px"
+                  ></RiLoader3Line>
+                </div>
+              </div>
+            </Transition>
           </div>
         </div>
       </Transition>

@@ -16,7 +16,11 @@ const {
 </script>
 
 <template>
-  <div>
+  <div class="relative">
+    <!-- bar-box 补丁，为解决firefox中盒子边缘与外阴影的缝隙问题 -->
+    <div
+      class="pointer-events-none absolute bottom-[-0.5px] left-[-0.5px] right-[-0.5px] top-[-0.5px] z-[4] rounded-t-[24px] border-2 border-color-background-soft"
+    ></div>
     <div
       class="bar-box relative z-[3] flow-root overflow-hidden bg-color-background-soft pb-1"
     >
@@ -62,5 +66,7 @@ const {
   box-shadow:
   // 外阴影
     0 0 6px 6px var(--color-background);
+  // // 内阴影
+  // inset 0 0 0 3px var(--color-background-soft);
 }
 </style>
