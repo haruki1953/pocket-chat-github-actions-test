@@ -35,6 +35,15 @@ export const useImagePageListQuery = (data: {
       if (pageNum.value == null) {
         throw new Error('pageNum.value == null')
       }
+
+      console.log(
+        'useImagePageListQuery',
+        queryKeys.imagePageList(
+          pageNum.value,
+          authorId.value,
+          searchContent.value
+        )
+      )
       // pb请求
       const pbRes = await pbImagePageListApi(pageNum.value, {
         author: authorId.value,

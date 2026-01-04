@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@remixicon/vue": "^4.6.0",
-    "@tanstack/vue-query": "^5.81.5",
+    "@tanstack/vue-query": "^5.92.1",
     "@unhead/vue": "^2.0.10",
     "@vueuse/core": "^13.3.0",
     "@vueuse/sound": "^2.1.3",
