@@ -16,7 +16,7 @@ export const useViewerImageTransformDesuwa = (data: {
 
   const minLeft = 40
   const minRight = 40
-  const minTop = 70
+  const minTop = 66
   const minBottom = 70
 
   const minScale = 0.5
