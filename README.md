@@ -553,6 +553,7 @@ You can also set an app logo, e.g. https://github.com/haruki1953/pocket-chat/blo
 - `pocketbase/` — Folder containing PocketBase  
 - `vue3/` — Vue3 frontend folder  
 - `project-tools-node/` — Project packaging tool scripts folder  
+- `pocketbase-typegen/` is the PocketBase type-generation tool.
 - `resources/` — Image resources used in the project  
 - `note/` — Development notes (few in this project, more in [PocketTogether](#about-pockettogether))  
 - `assets/` — Images used in README.md  
@@ -598,11 +599,32 @@ pnpm lint
 #### Generate Backend Database TS Types
 
 This project uses [pocketbase-typegen](https://www.npmjs.com/package/pocketbase-typegen) to generate PocketBase backend data types for the frontend:
+`"pocketbase-typegen": "^1.3.1",`
 
+【260111】I modified **pocketbase-typegen** and localized it into the `pocketbase-typegen/` directory.  
+You should install its dependencies inside that directory before using it from the frontend:
 ```sh
+# pwd
+# /e/Project/pocket-chat/pocketbase-typegen
+pnpm i
+```
+
+Using it from the frontend:
+```sh
+# pwd
+# /e/Project/pocket-chat/vue3
+
 pnpm pb-typegen-json
 
-# "pb-typegen-json": "pocketbase-typegen --json ../pocketbase/pb_schema.json --out ./src/lib/pocketbase/pocketbase-types.ts"
+# package.json - scripts
+# "pb-typegen-json": "node scripts/pocketbase-typegen.cjs"
+```
+
+For more details about `pocketbase-typegen/`, refer to:
+```
+vue3/scripts/pocketbase-typegen.cjs
+pocketbase-typegen/README.md
+pocketbase-typegen/README-pocketbase-typegen.md
 ```
 
 ### About PocketTogether

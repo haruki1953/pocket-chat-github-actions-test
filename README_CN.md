@@ -545,6 +545,7 @@ pocket-chat 项目目录结构
 - `pocketbase/` 为 PocketBase 所在的文件夹
 - `vue3/` 为 Vue3 前端文件夹
 - `project-tools-node/` 为项目打包工具脚本文件夹
+- `pocketbase-typegen/` 为pocketbase类型生成工具
 - `resources/` 为项目中所用到的一些图片资源
 - `note/` 为项目开发过程中的一些笔记（在本项目中很少，更多的在 [PocketTogether](#关于-pockettogether) 中）
 - `assets/` README.md 中使用的一些图片
@@ -584,11 +585,31 @@ pnpm lint
 #### 生成后端数据库的 TS 类型
 
 本项目使用 [pocketbase-typegen](https://www.npmjs.com/package/pocketbase-typegen) 来在前端生成 pocketbase 后端的数据类型：
+`"pocketbase-typegen": "^1.3.1",`
 
+【260111】自己对 pocketbase-typegen 改了改，将其本地化在了 `pocketbase-typegen/` 目录，应在此目录安装依赖后，再在前端中使用
 ```sh
+# pwd
+# /e/Project/pocket-chat/pocketbase-typegen
+pnpm i
+```
+
+前端使用
+```sh
+# pwd
+# /e/Project/pocket-chat/vue3
+
 pnpm pb-typegen-json
 
-# "pb-typegen-json": "pocketbase-typegen --json ../pocketbase/pb_schema.json --out ./src/lib/pocketbase/pocketbase-types.ts"
+# package.json - scripts
+# "pb-typegen-json": "node scripts/pocketbase-typegen.cjs"
+```
+
+关于 `pocketbase-typegen/` 其详情可参考
+```
+vue3\scripts\pocketbase-typegen.cjs
+pocketbase-typegen\README.md
+pocketbase-typegen\README-pocketbase-typegen.md
 ```
 
 ### 关于 PocketTogether
